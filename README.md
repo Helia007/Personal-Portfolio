@@ -1,233 +1,181 @@
-# 🚀 Personal Portfolio — Setup & Deployment Guide
+# Helia Amini — Portfolio
 
-A clean, luxury-editorial portfolio site. Dark/light mode, animated, responsive,
-with a working contact form powered by EmailJS.
+A fast, static portfolio site. No frameworks, no build step, no npm.
+**Everything you write lives in one file: `content.js`.**
 
 ---
 
-## 📁 File Structure
+## 🟢 The 30-second version
+
+| I want to…                    | Open this file        | Look for            |
+|-------------------------------|-----------------------|---------------------|
+| Add or edit a **project**     | `content.js`          | section `[3]`       |
+| Change my **name / title**    | `content.js`          | section `[1]`       |
+| Rewrite my **About** text     | `content.js`          | section `[4]`       |
+| Add a **job or degree**       | `content.js`          | section `[6]`       |
+| Add a **photo**               | drop it in `assets/`  | then name it in `content.js` |
+| Change the **colours**        | `css/styles.css`      | `--accent` at the top |
+
+You almost never need to touch `index.html`, `css/styles.css` or `js/main.js`.
+
+---
+
+## 📁 What's in here
 
 ```
-portfolio/
-├── index.html          ← Main page (all sections live here)
-├── css/
-│   └── styles.css      ← All styles, CSS variables, responsive design
-├── js/
-│   └── main.js         ← Interactions, animations, EmailJS form
-├── assets/
-│   ├── resume.pdf      ← Your CV (replace with yours)
-│   └── photo.jpg       ← Your profile photo (replace with yours)
-└── README.md           ← This file
+index.html          the page skeleton — rarely needs editing
+content.js       ← ⭐ ALL YOUR TEXT AND PROJECTS LIVE HERE
+css/styles.css      the design
+js/main.js          reads content.js and builds the page
+assets/
+  photo.jpg         your portrait
+  resume.pdf        your CV
+  projects/         ← put your project images in here
 ```
 
 ---
 
-## ✏️ How to Personalise
+## ⭐ Adding a project (the important one)
 
-### 1. Replace placeholder info
+1. Open `content.js`.
+2. Scroll to **section [3] PROJECTS**.
+3. Copy the template block written in the comment there.
+4. Paste it into the list — a good spot is right above the line that says
+   `⬆️ ADD YOUR NEXT PROJECT RIGHT HERE`.
+5. Fill it in:
 
-Search and replace the following in `index.html`:
-
-| Find                        | Replace with                  |
-|-----------------------------|-------------------------------|
-| `Alex Morgan`               | Your full name                |
-| `AM`                        | Your initials                 |
-| `hello@yourname.com`        | Your email                    |
-| `+31 6 12 34 56 78`         | Your phone number             |
-| `Amsterdam, Netherlands`    | Your city                     |
-| `yourusername`              | Your social media usernames   |
-| `yourname.com`              | Your domain                   |
-
-### 2. Add your photo
-
-Option A — Photo file:
-1. Drop your photo into `/assets/photo.jpg`
-2. In `index.html`, find the `.about-photo-placeholder` div and replace it with:
-   ```html
-   <img src="assets/photo.jpg" alt="Your Name" />
-   ```
-   (keep the `.about-photo-wrap` parent div)
-
-Option B — If you keep the CSS placeholder, just update the text inside it.
-
-### 3. Add your real projects
-
-In `index.html`, find the `<!-- Project 1 -->` block and update:
-- `<h3 class="project-title">` — project name
-- `<p class="project-desc">` — short description
-- `<span class="tag tag-sm">` — tech stack
-- `href="#"` on the overlay links → your GitHub URL and live demo URL
-
-To add a screenshot image, replace the `.project-img-placeholder` div with:
-```html
-<img src="assets/project-name.jpg" alt="Project Name" />
-```
-Recommended image size: **800 × 500px**
-
-### 4. Update your resume
-
-Replace `assets/resume.pdf` with your actual CV file.
-
-### 5. Typewriter effect
-
-In `js/main.js`, find the `roles` array around line 55 and update it:
-```javascript
-const roles = [
-  'full-stack apps.',
-  'beautiful UIs.',
-  // ← add your own
-];
+```js
+{
+  title:    'Smart Braille Reader',
+  category: 'Engineering',        // this becomes a filter button automatically
+  year:     '2026',
+  role:     'Hardware design & user testing',
+  status:   'In progress',        // small badge on the card — leave '' for none
+  featured: true,                 // true = the card takes a double-width slot
+  summary:  'One or two sentences. This is what people read on the card.',
+  image:    'assets/projects/braille.jpg',
+  gallery:  ['assets/projects/braille-2.jpg', 'assets/projects/braille-3.jpg'],
+  tags:     ['Electronics', 'CAD', 'User Testing'],
+  highlights: [
+    'Tested three sensor layouts with six users.',
+    'Cut the response time from 400 ms to 90 ms.',
+  ],
+  links: [
+    { label: 'GitHub', url: 'https://github.com/...', icon: 'fa-brands fa-github' },
+  ],
+},
 ```
 
-### 6. Skill bar percentages
+6. Save, refresh the page. That's it.
 
-In `index.html`, each skill bar has a `data-level` attribute:
-```html
-<div class="skill-fill" data-level="95"></div>
-```
-Change the number (0–100) to match your actual skill level.
+**The site handles the rest for you:**
+- numbering (01, 02, 03…) is automatic
+- the filter buttons are built from whatever `category` values you use
+- the grid re-flows for 3 projects or 30
+- clicking a card opens the full case-study popup
 
----
-
-## 📧 EmailJS — Contact Form Setup (Free)
-
-The contact form uses [EmailJS](https://www.emailjs.com/) to send emails without a backend.
-Free tier allows **200 emails/month**.
-
-### Step-by-step:
-
-1. **Create an account** at https://www.emailjs.com/
-2. **Add an Email Service** (Gmail recommended):
-   - Dashboard → Email Services → Add New Service
-   - Select Gmail → Connect Account → Copy the **Service ID**
-3. **Create an Email Template**:
-   - Dashboard → Email Templates → Create New Template
-   - Use these exact variable names in the template body:
-     ```
-     From: {{name}} ({{email}})
-     Subject: {{subject}}
-     Message: {{message}}
-     ```
-   - Copy the **Template ID**
-4. **Get your Public Key**:
-   - Account → API Keys → copy your **Public Key**
-5. **Update `js/main.js`** at the top:
-   ```javascript
-   const EMAILJS_SERVICE_ID  = 'service_xxxxxxx';   // ← your Service ID
-   const EMAILJS_TEMPLATE_ID = 'template_xxxxxxx';  // ← your Template ID
-   const EMAILJS_PUBLIC_KEY  = 'xxxxxxxxxxxxxxxx';  // ← your Public Key
-   ```
-
-**That's it!** The form will now send emails directly to your Gmail inbox.
+**Every field is optional except `title`.** Delete any line you don't need —
+empty sections simply disappear instead of leaving a gap.
 
 ---
 
-## 🌐 Deploying to GoDaddy (Shared Hosting)
+## 🖼 Adding pictures
 
-This is a static site — no Node.js or server setup needed.
+1. Put the image file in `assets/projects/`.
+2. Write the path in `content.js`: `image: 'assets/projects/my-file.jpg'`
 
-### Method 1: cPanel File Manager (Easiest)
+- Best size: **1200 × 750 px** (a wide rectangle). JPG or PNG.
+- Keep filenames lowercase with no spaces: `solar-panel.jpg`, not `Solar Panel.JPG`.
+  Web servers are case-sensitive — this is the #1 cause of missing images.
+- `gallery: [...]` takes extra images shown inside the popup.
+- **No image yet?** Leave `image: ''` and the site draws a clean coloured cover
+  with an icon. If you type a filename that doesn't exist, it falls back to the
+  same cover rather than showing a broken image.
 
-1. **Log in** to your GoDaddy account → My Products → Web Hosting → Manage
-2. Open **cPanel** (usually at `yourdomain.com/cpanel`)
-3. Go to **File Manager** → navigate to `public_html/`
-4. Click **Upload** → upload all your files:
-   - `index.html`
-   - `css/styles.css`
-   - `js/main.js`
-   - `assets/` folder (resume, photo)
-   
-   ⚠️ Make sure to preserve the folder structure exactly!
-5. Visit `yourdomain.com` — your site should be live.
-
-### Method 2: FTP with FileZilla (Recommended for multiple files)
-
-1. Download [FileZilla](https://filezilla-project.org/) (free)
-2. In GoDaddy cPanel → **FTP Accounts** → note your FTP username/host
-   - Host: `ftp.yourdomain.com`
-   - Username: your cPanel username
-   - Port: `21`
-3. Connect in FileZilla
-4. Navigate to `public_html/` on the right (server) panel
-5. Drag your entire `portfolio/` folder contents into `public_html/`
-6. Done! Visit your domain.
-
-### After Uploading — Checklist
-
-- [ ] Visit `yourdomain.com` — does the homepage load?
-- [ ] Check on mobile (use Chrome DevTools or your phone)
-- [ ] Test the contact form (send yourself a test message)
-- [ ] Check that resume download works (`assets/resume.pdf` exists)
-- [ ] Make sure all social links point to your real profiles
-
-### Custom Domain + HTTPS
-
-GoDaddy provides free SSL certificates:
-- cPanel → **SSL/TLS Status** → enable for your domain
-- Your site will then be accessible at `https://yourdomain.com`
+Your portrait goes in `assets/photo.jpg` (or change the name in `content.js` → `about.photo`).
+Your CV goes in `assets/resume.pdf`.
 
 ---
 
-## 🔧 Common Issues
+## 🎨 Changing the colours
 
-**Images not loading?**
-- Check file names are lowercase and match exactly (case-sensitive on servers)
-- Verify the file is in the right folder
+Open `css/styles.css`. At the very top there are two blocks — `:root` (light mode)
+and `[data-theme="dark"]` (dark mode). Change these two lines in **each** block:
 
-**Contact form not sending?**
-- Make sure you replaced all three EmailJS credentials in `main.js`
-- Check the browser console (F12) for error messages
-- Verify your EmailJS template uses `{{name}}`, `{{email}}`, `{{subject}}`, `{{message}}`
-
-**Fonts not loading?**
-- This requires an internet connection (Google Fonts CDN)
-- For offline use, download the fonts and host them locally
-
-**Site looks different on mobile?**
-- Hard refresh (Ctrl+Shift+R / Cmd+Shift+R)
-- Clear browser cache
-
----
-
-## 🎨 Customising the Design
-
-### Change accent colour (the gold)
-
-In `css/styles.css`, find the `:root` block and update:
 ```css
---accent:     #c9a448;   /* change to any hex colour */
---accent-rgb: 201, 164, 72;  /* same colour as RGB values (no #) */
+--accent:   #2f5bff;   /* main colour: buttons, links, highlights */
+--accent-2: #00b3a4;   /* secondary accent: small details */
 ```
 
-### Switch to light mode by default
-
-In `index.html`, change:
-```html
-<html lang="en" data-theme="dark">
-```
-to:
-```html
-<html lang="en" data-theme="light">
-```
-
-### Add more sections
-
-Copy any `<section>` block in `index.html`, give it a new `id`,
-and add a nav link pointing to `#your-new-id`.
+Pick the dark-mode versions a little lighter than the light-mode ones so text
+stays readable on a dark background.
 
 ---
 
-## 📦 Tech Stack
+## 🔤 Common edits, in one place
 
-- **HTML5** — semantic markup, SEO meta tags, OG tags
-- **CSS3** — custom properties, Grid, Flexbox, CSS animations, clamp()
-- **Vanilla JavaScript** — IntersectionObserver, EmailJS, no build tools needed
-- **EmailJS** — contact form backend (free tier)
-- **Google Fonts** — Cormorant Garamond, Archivo, DM Mono
-- **Font Awesome 6** — icons
-
-No frameworks, no npm, no build step. Just open `index.html` and go.
+| What you see on the site        | Where in `content.js`          |
+|---------------------------------|--------------------------------|
+| Green "Open to internships" pill | `profile.availability` — set to `''` to hide |
+| The rotating words in the hero  | `hero.rotating`                |
+| The three numbers under the hero| `hero.stats`                   |
+| The scrolling word ticker       | `hero.marquee`                 |
+| Skills columns                  | section `[5] skills`           |
+| Timeline entries                | section `[6] experience`       |
+| "Now & Next" cards              | section `[8] next`             |
+| Email address                   | `profile.email`                |
 
 ---
 
-Made with ♥
+## ✅ Rules so nothing breaks
+
+1. Only edit text **inside the 'single quotes'**.
+2. Keep the **comma** at the end of each line.
+3. For an apostrophe inside text, write `\'` — e.g. `'I\'m a student'`.
+4. If the page goes blank, you have a typo. Press **F12** in the browser,
+   open the **Console** tab, and it will tell you which line.
+
+---
+
+## 🌐 Putting it online
+
+The site is plain HTML/CSS/JS, so it works on any host.
+
+**GitHub Pages (free):** repository → Settings → Pages → Source: `main` branch,
+`/ (root)` → Save. Live in a minute at `username.github.io/repo-name`.
+
+**GoDaddy / cPanel:** File Manager → `public_html/` → upload `index.html`,
+`content.js`, and the `css/`, `js/`, `assets/` folders. Keep the folder structure
+exactly as it is. Then enable free SSL under cPanel → SSL/TLS Status.
+
+**Custom domain on GitHub Pages:** Settings → Pages → Custom domain, then point
+a CNAME record at `username.github.io` in your registrar's DNS.
+
+After uploading, check: homepage loads, images appear, résumé downloads,
+site looks right on a phone, all social links go to your real profiles.
+
+---
+
+## 🔧 If something looks wrong
+
+**Images not showing** — filename is case-sensitive; check it matches exactly,
+and that the file really is in `assets/projects/`.
+
+**Icons are blank squares** — Font Awesome is loaded from a CDN, so you need
+an internet connection.
+
+**Changes not appearing** — hard refresh: `Ctrl + Shift + R` (Windows) or
+`Cmd + Shift + R` (Mac).
+
+**Page is blank** — a missing comma or quote in `content.js`. Check the browser
+console (F12).
+
+---
+
+## Built with
+
+HTML5 · CSS custom properties, Grid & Flexbox · vanilla JavaScript ·
+Google Fonts (Space Grotesk, Inter, JetBrains Mono) · Font Awesome 6
+
+Light and dark themes, full keyboard navigation, reduced-motion support,
+and a print stylesheet. No build tools required — open `index.html` and go.

@@ -13,7 +13,8 @@ A static site. No frameworks, no build step, no npm.
 | Change my **name / email**  | `content.js`   | section `[1]` |
 | Change the **first screen** | `content.js`   | section `[2]` |
 | Rewrite the **big line**    | `content.js`   | section `[3]` |
-| Edit **About / credentials**| `content.js`   | section `[5]` |
+| Edit **skills**             | `content.js`   | section `[5]` |
+| Edit **About / credentials**| `content.js`   | section `[6]` |
 | Add a **photo**             | `assets/`      | then name it in `content.js` |
 | Change the **accent colour**| `css/styles.css` | `--accent` at the top |
 
@@ -31,10 +32,16 @@ Every sentence you add takes some of that away. If you can say it in five
 words, say it in five. The one place to actually write is the statement in
 section `[3]` — two sentences, no more.
 
-There is a faint circuit pattern behind your name and a thin line that lights
-up when someone hovers a project. That is the entire electrical motif, and it
-is deliberately almost invisible. To remove it, set `.circuit { opacity: 0 }`
-in `css/styles.css`.
+The opener is built from four stacked layers — drifting fields of coloured
+light, a circuit trace pattern with pulses travelling along it, a vignette and
+film grain. That is what gives it depth rather than looking like a black
+rectangle. To calm the circuitry, lower the opacity on
+`.circuit .traces path` in `css/styles.css`; to remove the coloured light,
+delete the `<span class="glow">` elements from `index.html`.
+
+Projects are laid out as a numbered index with a preview panel that follows
+whichever row you point at. Hovering a row shifts its title and draws an
+accent line beneath it.
 
 ---
 

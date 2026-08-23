@@ -35,9 +35,12 @@
 
   /* ── 2. OPENER ─────────────────────────────────────────────────────── */
   var O = D.opener || {};
-  set('openerEyebrow', esc(O.eyebrow || P.location || ''));
-  set('openerName',    esc(P.name || ''));
-  set('openerLine',    esc(O.line || ''));
+  set('openerIndex', esc(O.index || ''));
+  set('openerName',  esc(P.name || ''));
+  set('openerLine',  esc(O.line || ''));
+  set('openerMeta', list(O.meta).map(function (m) {
+    return '<div><dt>' + esc(m.label) + '</dt><dd>' + esc(m.value) + '</dd></div>';
+  }).join(''));
 
   /* ── 3. STATEMENT ──────────────────────────────────────────────────── */
   var S = D.statement || {};
@@ -47,19 +50,19 @@
            '<span class="meta-label">' + esc(m.label) + '</span></li>';
   }).join(''));
 
-  /* ── 4. WORK ───────────────────────────────────────────────────────── */
+  /* ── 4. WORK — a numbered index with a preview that follows it ────── */
   var projects = list(D.projects).filter(function (p) { return has(p.title); });
-  var grid     = document.getElementById('workGrid');
-  var emptyEl  = document.getElementById('emptyNote');
+  var indexEl   = document.getElementById('workIndex');
+  var previewEl = document.getElementById('workPreview');
 
   function coverHTML(p) {
-    return '<div class="work-cover"><span>' + esc(p.category || 'Project') + '</span></div>';
+    return '<div class="cover"><span>' + esc(p.category || 'Project') + '</span></div>';
   }
   function mediaHTML(p) {
     if (!has(p.image)) return coverHTML(p);
     return '<img src="' + esc(p.image) + '" alt="' + esc(p.title) + '" loading="lazy" data-fallback="cover">';
   }
-  /* a wrong filename falls back to the placeholder instead of a broken image */
+  /* a wrong filename falls back to the drawn cover rather than breaking */
   function wireFallbacks(root, project) {
     $$('img[data-fallback]', root).forEach(function (img) {
       img.addEventListener('error', function () {
@@ -69,62 +72,61 @@
     });
   }
 
-  function itemHTML(p, i) {
-    var side = [];
-    if (has(p.category)) side.push(esc(p.category));
-    if (has(p.year))     side.push(esc(p.year));
-    return '' +
-      '<button class="work-item reveal' + (p.featured ? ' featured' : '') + '" data-i="' + i +
-        '" data-cat="' + esc(p.category || '') + '" aria-haspopup="dialog">' +
-        '<div class="work-media">' + mediaHTML(p) + '</div>' +
-        '<div class="work-cap">' +
-          '<span class="work-title">' + esc(p.title) +
-            (has(p.status) ? '<span class="work-status">' + esc(p.status) + '</span>' : '') +
+  var countEl = document.getElementById('workCount');
+  if (countEl) countEl.textContent = projects.length + (projects.length === 1 ? ' project' : ' projects');
+
+  if (indexEl) {
+    indexEl.innerHTML = projects.map(function (p, i) {
+      var meta = [];
+      if (has(p.category)) meta.push(esc(p.category));
+      if (has(p.year))     meta.push(esc(p.year));
+      return '<li class="work-row' + (i === 0 ? ' on' : '') + '" data-i="' + i + '">' +
+        '<button class="row-btn" aria-haspopup="dialog">' +
+          '<span class="row-thumb">' + mediaHTML(p) + '</span>' +
+          '<span class="row-num">' + String(i + 1).padStart(2, '0') + '</span>' +
+          '<span class="row-title">' + esc(p.title) +
+            (has(p.status) ? '<span class="row-status">' + esc(p.status) + '</span>' : '') +
           '</span>' +
-          '<span class="work-side">' + side.join(' · ') + '</span>' +
-        '</div>' +
-      '</button>';
-  }
-
-  if (grid) {
-    grid.innerHTML = projects.map(itemHTML).join('');
-    $$('.work-item', grid).forEach(function (el) {
-      wireFallbacks(el, projects[parseInt(el.getAttribute('data-i'), 10)]);
+          '<span class="row-meta">' + meta.join(' · ') + '</span>' +
+        '</button></li>';
+    }).join('');
+    $$('.work-row', indexEl).forEach(function (row) {
+      wireFallbacks(row, projects[parseInt(row.getAttribute('data-i'), 10)]);
     });
   }
 
-  /* filters, built from whatever categories you use */
-  var filterBar = document.getElementById('filters');
-  if (filterBar && projects.length) {
-    var cats = [];
-    projects.forEach(function (p) {
-      var c = has(p.category) ? p.category : 'Other';
-      if (cats.indexOf(c) === -1) cats.push(c);
+  /* the preview panel: every cover stacked, one visible at a time */
+  if (previewEl) {
+    previewEl.innerHTML = projects.map(function (p, i) {
+      return '<figure' + (i === 0 ? ' class="on"' : '') + ' data-i="' + i + '">' + mediaHTML(p) + '</figure>';
+    }).join('');
+    $$('figure', previewEl).forEach(function (fig) {
+      wireFallbacks(fig, projects[parseInt(fig.getAttribute('data-i'), 10)]);
     });
+  }
 
-    if (cats.length > 1) {
-      filterBar.innerHTML = ['<button class="filter active" data-f="all">All</button>']
-        .concat(cats.map(function (c) {
-          return '<button class="filter" data-f="' + esc(c) + '">' + esc(c) + '</button>';
-        })).join('');
+  function activate(i) {
+    if (indexEl) $$('.work-row', indexEl).forEach(function (r) {
+      r.classList.toggle('on', parseInt(r.getAttribute('data-i'), 10) === i);
+    });
+    if (previewEl) $$('figure', previewEl).forEach(function (f) {
+      f.classList.toggle('on', parseInt(f.getAttribute('data-i'), 10) === i);
+    });
+  }
 
-      filterBar.addEventListener('click', function (e) {
-        var btn = e.target.closest('.filter');
-        if (!btn) return;
-        $$('.filter', filterBar).forEach(function (b) { b.classList.remove('active'); });
-        btn.classList.add('active');
-        var f = btn.getAttribute('data-f'), shown = 0;
-        $$('.work-item', grid).forEach(function (item) {
-          var ok = f === 'all' || item.getAttribute('data-cat') === f;
-          item.style.display = ok ? '' : 'none';
-          if (ok) shown++;
-        });
-        if (emptyEl) emptyEl.hidden = shown > 0;
-      });
-    } else {
-      /* one category only — show the quiet instruction instead of a filter row */
-      filterBar.outerHTML = '<p class="hint">Select a project to see more.</p>';
-    }
+  if (indexEl) {
+    indexEl.addEventListener('mouseover', function (e) {
+      var row = e.target.closest('.work-row');
+      if (row) activate(parseInt(row.getAttribute('data-i'), 10));
+    });
+    indexEl.addEventListener('focusin', function (e) {
+      var row = e.target.closest('.work-row');
+      if (row) activate(parseInt(row.getAttribute('data-i'), 10));
+    });
+    indexEl.addEventListener('click', function (e) {
+      var row = e.target.closest('.work-row');
+      if (row) openProject(parseInt(row.getAttribute('data-i'), 10));
+    });
   }
 
   /* ── 5. PROJECT DIALOG ─────────────────────────────────────────────── */
@@ -185,13 +187,18 @@
     if (lastFocus) lastFocus.focus();
   }
 
-  if (grid) grid.addEventListener('click', function (e) {
-    var item = e.target.closest('.work-item');
-    if (item) openProject(parseInt(item.getAttribute('data-i'), 10));
-  });
   if (modal) modal.addEventListener('click', function (e) {
     if (e.target.hasAttribute('data-close') || e.target.closest('#modalClose')) closeProject();
   });
+
+  /* ── 5b. SKILLS — datasheet rows ───────────────────────────────────── */
+  set('skillSheet', list(D.skills).map(function (g) {
+    return '<div class="sheet-row reveal">' +
+      '<div class="sheet-group">' + esc(g.group) + '</div>' +
+      '<div class="sheet-items">' +
+        list(g.items).map(function (it) { return '<span>' + esc(it) + '</span>'; }).join('') +
+      '</div></div>';
+  }).join(''));
 
   /* ── 6. ABOUT ──────────────────────────────────────────────────────── */
   var A = D.about || {};

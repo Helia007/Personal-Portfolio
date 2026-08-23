@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- ✏️ EDIT: the text search engines show. Your name/title also live in content.js -->
+  <!-- ✏️ EDIT: search-engine text. Your name and details live in content.js -->
   <title>Helia Amini</title>
   <meta name="description" content="Helia Amini — electrical engineering and human-centred design. Eindhoven University of Technology." />
   <meta name="author" content="Helia Amini" />
@@ -12,13 +12,13 @@
   <meta property="og:description" content="Electrical engineering and human-centred design." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://heliaamini.com" />
-  <meta name="theme-color" content="#08090b" />
+  <meta name="theme-color" content="#06070a" />
 
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2308090b'/%3E%3Ctext x='32' y='42' font-family='Helvetica,Arial,sans-serif' font-size='26' font-weight='300' letter-spacing='1' fill='white' text-anchor='middle'%3EHA%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2306070a'/%3E%3Ctext x='32' y='42' font-family='Helvetica,Arial,sans-serif' font-size='26' font-weight='300' fill='white' text-anchor='middle'%3EHA%3C/text%3E%3C/svg%3E" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@200;300;400;500&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@200;300;400;500&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
 
   <script>
@@ -33,15 +33,16 @@
 
 <a class="skip-link" href="#work">Skip to work</a>
 
-<!-- ══════════════ NAVIGATION ══════════════ -->
+<!-- ══════════════ NAV ══════════════ -->
 <header class="nav on-dark" id="nav">
-  <div class="wrap nav-inner">
+  <div class="shell nav-inner">
     <a href="#top" class="wordmark" id="wordmark" aria-label="Back to top"></a>
     <nav class="nav-menu" id="navMenu" aria-label="Main">
-      <a class="nav-link" href="#work">Work</a>
-      <a class="nav-link" href="#about">About</a>
-      <a class="nav-link" href="#contact">Contact</a>
-      <a class="nav-link" id="navResume" download>Résumé</a>
+      <a class="nav-link" href="#work"><span class="nl-num">01</span>Work</a>
+      <a class="nav-link" href="#skills"><span class="nl-num">02</span>Skills</a>
+      <a class="nav-link" href="#about"><span class="nl-num">03</span>About</a>
+      <a class="nav-link" href="#contact"><span class="nl-num">04</span>Contact</a>
+      <a class="nav-link nav-cv" id="navResume" download>Résumé</a>
     </nav>
     <div class="nav-tools">
       <button class="icon-btn" id="themeToggle" aria-label="Switch between light and dark">
@@ -60,88 +61,133 @@
   <!-- ══════════════ OPENER ══════════════ -->
   <section class="opener" id="opener">
 
-    <!-- The circuit field. Deliberately near-invisible — it should register
-         as texture, not decoration. Opacity is set in styles.css (.circuit). -->
-    <svg class="circuit" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
-      <g class="traces" fill="none" stroke-linecap="square">
-        <path id="t1" d="M-40,168 H280 L360,248 H660" pathLength="1000"/>
-        <path id="t2" d="M1480,132 H1180 L1100,212 H860" pathLength="1000"/>
-        <path id="t3" d="M-40,712 H196 L276,632 H556 L636,712 H912" pathLength="1000"/>
-        <path id="t4" d="M1480,772 H1244 L1164,692 H948" pathLength="1000"/>
-        <path id="t5" d="M736,-40 V128 L816,208 V352" pathLength="1000"/>
-        <path id="t6" d="M404,940 V804 L484,724 V572" pathLength="1000"/>
-        <path id="t7" d="M-40,432 H128 L208,352 H392" pathLength="1000"/>
-        <path id="t8" d="M1480,452 H1296 L1216,532 H1032" pathLength="1000"/>
-      </g>
-      <g class="pulses" fill="none" stroke-linecap="round">
-        <use href="#t1" class="pulse p1"/>
-        <use href="#t3" class="pulse p2"/>
-        <use href="#t5" class="pulse p3"/>
-        <use href="#t8" class="pulse p4"/>
-      </g>
-      <g class="vias">
-        <circle cx="360" cy="248" r="2.5"/><circle cx="1100" cy="212" r="2.5"/>
-        <circle cx="636" cy="712" r="2.5"/><circle cx="816" cy="208" r="2.5"/>
-        <circle cx="208" cy="352" r="2.5"/><circle cx="1216" cy="532" r="2.5"/>
-      </g>
-    </svg>
-
-    <div class="wrap opener-inner">
-      <p class="eyebrow" id="openerEyebrow"></p>
-      <h1 class="display" id="openerName"></h1>
-      <p class="opener-line" id="openerLine"></p>
+    <!-- DEPTH, in four layers. This is what stops it reading as
+         "black background": light, colour, circuitry, then grain. -->
+    <div class="atmos" aria-hidden="true">
+      <span class="glow glow-a"></span>
+      <span class="glow glow-b"></span>
+      <span class="glow glow-c"></span>
+      <svg class="circuit" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" focusable="false">
+        <g class="traces" fill="none" stroke-linecap="square">
+          <path id="t1" d="M-40,148 H286 L366,228 H680"  pathLength="1000"/>
+          <path id="t2" d="M1480,112 H1186 L1106,192 H852" pathLength="1000"/>
+          <path id="t3" d="M-40,706 H196 L276,626 H556 L636,706 H930" pathLength="1000"/>
+          <path id="t4" d="M1480,768 H1250 L1170,688 H942" pathLength="1000"/>
+          <path id="t5" d="M742,-40 V122 L822,202 V368"  pathLength="1000"/>
+          <path id="t6" d="M398,940 V806 L478,726 V566"  pathLength="1000"/>
+          <path id="t7" d="M-40,428 H128 L208,348 H408"  pathLength="1000"/>
+          <path id="t8" d="M1480,448 H1300 L1220,528 H1010" pathLength="1000"/>
+          <path id="t9" d="M1480,308 H1372 L1292,228 H1120" pathLength="1000"/>
+          <path id="t10" d="M-40,556 H92 L172,636 H330"  pathLength="1000"/>
+        </g>
+        <g class="pulses" fill="none" stroke-linecap="round">
+          <use href="#t1" class="pulse p1"/><use href="#t3" class="pulse p2"/>
+          <use href="#t5" class="pulse p3"/><use href="#t8" class="pulse p4"/>
+          <use href="#t2" class="pulse p5"/><use href="#t10" class="pulse p6"/>
+        </g>
+        <g class="vias">
+          <circle cx="366" cy="228" r="2.6"/><circle cx="1106" cy="192" r="2.6"/>
+          <circle cx="636" cy="706" r="2.6"/><circle cx="822" cy="202" r="2.6"/>
+          <circle cx="208" cy="348" r="2.6"/><circle cx="1220" cy="528" r="2.6"/>
+          <circle cx="1292" cy="228" r="2.6"/><circle cx="172" cy="636" r="2.6"/>
+        </g>
+      </svg>
+      <span class="vignette"></span>
+      <span class="grain"></span>
     </div>
 
-    <a class="scroll-cue" href="#statement" aria-label="Scroll down">
-      <span class="cue-rail"><span class="cue-pulse"></span></span>
-    </a>
+    <span class="edge-index" id="openerIndex" aria-hidden="true"></span>
+
+    <div class="shell opener-grid">
+      <p class="opener-line" id="openerLine"></p>
+      <div class="opener-foot">
+        <div class="hairline"></div>
+        <h1 class="display" id="openerName"></h1>
+        <dl class="opener-meta" id="openerMeta"></dl>
+      </div>
+      <a class="scroll-cue" href="#statement" aria-label="Scroll down">
+        <span class="cue-word">Scroll</span>
+        <span class="cue-rail"><span class="cue-pulse"></span></span>
+      </a>
+    </div>
+
   </section>
 
   <!-- ══════════════ STATEMENT ══════════════ -->
   <section class="statement" id="statement">
-    <div class="wrap">
+    <div class="shell statement-grid">
       <p class="statement-text reveal" id="statementText"></p>
       <ul class="statement-meta reveal" id="statementMeta"></ul>
     </div>
   </section>
 
-  <!-- ══════════════ WORK ══════════════ -->
-  <section class="work" id="work">
-    <div class="wrap">
-      <div class="rule reveal"><span class="node"></span></div>
-      <div class="work-head reveal">
-        <h2 class="label">Selected Work</h2>
-        <nav class="work-filters" id="filters" aria-label="Filter work"></nav>
+  <!-- ══════════════ WORK — index on the left, live preview on the right ══════════════ -->
+  <section class="chapter-section work" id="work">
+    <div class="shell">
+      <header class="chapter reveal">
+        <span class="chapter-num">01</span>
+        <h2 class="chapter-title">Work</h2>
+        <span class="chapter-note" id="workCount"></span>
+      </header>
+
+      <div class="work-layout">
+        <ol class="work-index" id="workIndex"></ol>
+        <aside class="work-preview" id="workPreview" aria-hidden="true"></aside>
       </div>
-      <div class="work-grid" id="workGrid"></div>
       <p class="empty-note" id="emptyNote" hidden>Nothing under this filter.</p>
     </div>
   </section>
 
+  <!-- ══════════════ SKILLS — a datasheet ══════════════ -->
+  <section class="chapter-section skills" id="skills">
+    <div class="shell">
+      <header class="chapter reveal">
+        <span class="chapter-num">02</span>
+        <h2 class="chapter-title">Capabilities</h2>
+      </header>
+      <div class="sheet" id="skillSheet"></div>
+    </div>
+  </section>
+
   <!-- ══════════════ ABOUT ══════════════ -->
-  <section class="about" id="about">
-    <div class="wrap">
-      <div class="rule reveal"><span class="node"></span></div>
-      <h2 class="label reveal">About</h2>
-      <div class="about-grid">
-        <figure class="portrait reveal" id="portrait"></figure>
+  <section class="chapter-section about" id="about">
+    <div class="shell">
+      <header class="chapter reveal">
+        <span class="chapter-num">03</span>
+        <h2 class="chapter-title">About</h2>
+      </header>
+      <div class="about-layout">
+        <div class="about-figure reveal">
+          <figure class="portrait" id="portrait"></figure>
+        </div>
         <div class="about-copy reveal">
           <div id="aboutText"></div>
-          <dl class="credentials" id="credentials"></dl>
         </div>
       </div>
+      <dl class="credentials reveal" id="credentials"></dl>
     </div>
   </section>
 
   <!-- ══════════════ CONTACT ══════════════ -->
   <section class="contact" id="contact">
-    <div class="wrap contact-inner">
+    <div class="atmos" aria-hidden="true">
+      <span class="glow glow-d"></span>
+      <span class="vignette"></span>
+      <span class="grain"></span>
+    </div>
+    <div class="shell contact-grid">
+      <header class="chapter chapter-dark reveal">
+        <span class="chapter-num">04</span>
+        <h2 class="chapter-title">Contact</h2>
+      </header>
       <p class="contact-line reveal" id="contactLine"></p>
       <a class="contact-mail reveal" id="contactMail"></a>
       <p class="contact-note reveal" id="contactNote"></p>
       <div class="contact-foot reveal">
         <div class="socials" id="socials"></div>
-        <a class="ghost-link" id="contactResume" download>Résumé <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v13M6 12l6 6 6-6"/></svg></a>
+        <a class="ghost-link" id="contactResume" download>Résumé
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v13M6 12l6 6 6-6"/></svg>
+        </a>
       </div>
       <p class="colophon" id="colophon"></p>
     </div>
@@ -153,13 +199,15 @@
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
   <div class="modal-backdrop" data-close></div>
   <div class="modal-panel" role="document">
-    <button class="modal-close" id="modalClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <button class="modal-close" id="modalClose" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
     <div class="modal-scroll" id="modalBody"></div>
   </div>
 </div>
 
 <noscript>
-  <div class="wrap noscript">
+  <div class="shell noscript">
     <h2>Helia Amini</h2>
     <p>This site needs JavaScript. Reach me at
       <a href="mailto:helia@heliaamini.com">helia@heliaamini.com</a> or on

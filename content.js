@@ -20,8 +20,9 @@
      [2] OPENER ........ the first black screen
      [3] STATEMENT ..... the one big line
      [4] PROJECTS ...... ⭐ the heart of the site
-     [5] ABOUT ......... photo, a few lines, credentials
-     [6] CONTACT ....... the closing screen
+     [5] SKILLS ........ your disciplines, as a datasheet
+     [6] ABOUT ......... photo, a few lines, credentials
+     [7] CONTACT ....... the closing screen
    ═══════════════════════════════════════════════════════════════════════════ */
 
 window.PORTFOLIO = {
@@ -47,8 +48,15 @@ profile: {
    [2] OPENER  —  the first thing anyone sees. Keep it to one line.
    ═══════════════════════════════════════════════════════════════════════════ */
 opener: {
-  eyebrow: 'Eindhoven · Netherlands',      // the small line above your name
-  line:    'Electrical engineering and human-centred design.',
+  index: 'Portfolio — 2026',               // the small rotated label on the left edge
+  line:  'Electrical engineering and human-centred design.',
+
+  // The three columns under your name. Delete one to show two.
+  meta: [
+    { label: 'Based in', value: 'Eindhoven, NL' },
+    { label: 'Reading',  value: 'EE + Psychology & Technology, TU/e' },
+    { label: 'Status',   value: 'Open to internships' },
+  ],
 },
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -203,7 +211,30 @@ projects: [
 ],
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   [5] ABOUT  —  short. Two paragraphs is the ceiling.
+   [5] SKILLS  —  laid out like a datasheet: a discipline on the left,
+   what you can do on the right. Copy a { } block to add a whole new row.
+   ═══════════════════════════════════════════════════════════════════════════ */
+skills: [
+  {
+    group: 'Electrical & Hardware',
+    items: ['Circuit Analysis', 'Signals & Systems', 'CAD Design', 'Prototyping', 'Measurement & Test'],
+  },
+  {
+    group: 'Software & Data',
+    items: ['Python', 'HTML / CSS / JavaScript', 'Node.js', 'Data Analysis'],
+  },
+  {
+    group: 'Human Factors',
+    items: ['UX Research', 'Human-Technology Interaction', 'Behavioural Science', 'User Testing'],
+  },
+  {
+    group: 'Working Practice',
+    items: ['Technical Writing', 'Public Speaking', 'Entrepreneurship', 'English · Dutch · Farsi'],
+  },
+],
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   [6] ABOUT  —  short. Two paragraphs is the ceiling.
    ═══════════════════════════════════════════════════════════════════════════ */
 about: {
   photo:    'assets/photo.jpg',            // '' shows your initials instead
@@ -225,7 +256,7 @@ about: {
 },
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   [6] CONTACT  —  the closing screen
+   [7] CONTACT  —  the closing screen
    ═══════════════════════════════════════════════════════════════════════════ */
 contact: {
   line: 'Available for internships and collaborations.',

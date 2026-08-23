@@ -1,14 +1,13 @@
 /* ═══════════════════════════════════════════════════════════════════════
    main.js — reads content.js and builds the page.
-   You should not need to edit this file. All your text lives in content.js
+   You should not need to edit this. All your text lives in content.js
    ═══════════════════════════════════════════════════════════════════════ */
 (function () {
   'use strict';
 
   var D = window.PORTFOLIO;
-  if (!D) { console.error('content.js did not load — check the file name and that it sits next to index.html'); return; }
+  if (!D) { console.error('content.js did not load — check it sits next to index.html'); return; }
 
-  /* ── helpers ───────────────────────────────────────────────────────── */
   var $  = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var esc = function (v) {
@@ -16,37 +15,16 @@
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   };
-  var has = function (v) { return v != null && String(v).trim() !== ''; };
+  var has  = function (v) { return v != null && String(v).trim() !== ''; };
   var list = function (v) { return Array.isArray(v) ? v.filter(has) : []; };
-  var set = function (id, html) { var el = document.getElementById(id); if (el) el.innerHTML = html; return el; };
+  var set  = function (id, html) { var el = document.getElementById(id); if (el) el.innerHTML = html; return el; };
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* A stable colour + icon for projects that have no image yet */
-  var COVER_ICONS = {
-    engineering: 'fa-solid fa-microchip',
-    hardware:    'fa-solid fa-microchip',
-    research:    'fa-solid fa-flask',
-    design:      'fa-solid fa-pen-ruler',
-    software:    'fa-solid fa-code',
-    web:         'fa-solid fa-code',
-    community:   'fa-solid fa-users',
-    product:     'fa-solid fa-cube'
-  };
-  function coverIcon(cat) {
-    var k = String(cat || '').toLowerCase();
-    for (var key in COVER_ICONS) if (k.indexOf(key) > -1) return COVER_ICONS[key];
-    return 'fa-solid fa-layer-group';
-  }
-  function hue(str) {
-    var h = 0, s = String(str || '');
-    for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 360;
-    return h;
-  }
-
-  /* ── 1. PROFILE, NAV, FOOTER ───────────────────────────────────────── */
   var P = D.profile || {};
 
-  var logoHTML = '<span class="br">[</span>' + esc(P.initials || 'ME') + '<span class="br">]</span>';
-  ['logo', 'logoFooter'].forEach(function (id) { set(id, logoHTML); });
+  /* ── 1. NAV, WORDMARK, RÉSUMÉ ──────────────────────────────────────── */
+  set('wordmark', esc(P.name || ''));
+  if (has(P.name)) document.title = P.name;
 
   ['navResume', 'contactResume'].forEach(function (id) {
     var el = document.getElementById(id);
@@ -55,120 +33,67 @@
     else el.remove();
   });
 
-  if (has(P.name)) document.title = P.name + (has(P.title) ? ' — ' + P.title : '');
+  /* ── 2. OPENER ─────────────────────────────────────────────────────── */
+  var O = D.opener || {};
+  set('openerEyebrow', esc(O.eyebrow || P.location || ''));
+  set('openerName',    esc(P.name || ''));
+  set('openerLine',    esc(O.line || ''));
 
-  set('footerCopy', '© ' + new Date().getFullYear() + ' ' + esc(P.name || ''));
-  set('footerTagline', esc((D.footer && D.footer.tagline) || P.tagline || ''));
-  set('footerNote', esc((D.footer && D.footer.note) || ''));
-
-  /* ── 2. HERO ───────────────────────────────────────────────────────── */
-  var H = D.hero || {};
-
-  if (has(P.availability)) {
-    var pill = document.getElementById('heroPill');
-    if (pill) { pill.hidden = false; set('heroPillText', esc(P.availability)); }
-  }
-  set('heroGreeting', esc(H.greeting || 'Hello — I’m'));
-  set('heroName',     esc(P.name || ''));
-  set('heroTitle',    esc(P.title || ''));
-  set('heroIntro',    esc(H.intro || P.tagline || ''));
-  set('heroRotatePrefix', esc(H.rotatingPrefix || ''));
-
-  set('heroStats', list(H.stats).map(function (s) {
-    return '<li><span class="stat-value">' + esc(s.value) + '</span>' +
-           '<span class="stat-label">' + esc(s.label) + '</span></li>';
+  /* ── 3. STATEMENT ──────────────────────────────────────────────────── */
+  var S = D.statement || {};
+  set('statementText', esc(S.text || ''));
+  set('statementMeta', list(S.meta).map(function (m) {
+    return '<li><span class="meta-value">' + esc(m.value) + '</span>' +
+           '<span class="meta-label">' + esc(m.label) + '</span></li>';
   }).join(''));
 
-  var words = list(H.marquee);
-  if (words.length) {
-    var run = words.map(function (w) { return '<span>' + esc(w) + '</span><span class="sep">/</span>'; }).join('');
-    set('marquee', run + run);   // duplicated so the loop is seamless
-  }
-
-  /* typewriter */
-  var rotEl = document.getElementById('heroRotate');
-  var roles = list(H.rotating);
-  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (rotEl && roles.length) {
-    if (reduceMotion) {
-      rotEl.textContent = roles[0];
-    } else {
-      var ri = 0, ci = 0, del = false;
-      (function tick() {
-        var word = roles[ri];
-        ci += del ? -1 : 1;
-        rotEl.textContent = word.slice(0, ci);
-        var wait = 78;
-        if (!del && ci === word.length) { del = true; wait = 1900; }
-        else if (del && ci === 0) { del = false; ri = (ri + 1) % roles.length; wait = 350; }
-        else if (del) { wait = 38; }
-        setTimeout(tick, wait);
-      })();
-    }
-  }
-
-  /* ── 3. PROJECTS ───────────────────────────────────────────────────── */
+  /* ── 4. WORK ───────────────────────────────────────────────────────── */
   var projects = list(D.projects).filter(function (p) { return has(p.title); });
-  var grid     = document.getElementById('projectGrid');
+  var grid     = document.getElementById('workGrid');
   var emptyEl  = document.getElementById('emptyNote');
 
   function coverHTML(p) {
-    return '<div class="card-cover" style="--h:' + hue(p.category || p.title) + '">' +
-           '<i class="' + coverIcon(p.category) + '"></i></div>';
+    return '<div class="work-cover"><span>' + esc(p.category || 'Project') + '</span></div>';
   }
-
-  /* Shows the image if it exists; quietly falls back to a drawn cover if the
-     file is missing or misspelled — so a wrong filename never breaks the page. */
   function mediaHTML(p) {
     if (!has(p.image)) return coverHTML(p);
     return '<img src="' + esc(p.image) + '" alt="' + esc(p.title) + '" loading="lazy" data-fallback="cover">';
   }
-
+  /* a wrong filename falls back to the placeholder instead of a broken image */
   function wireFallbacks(root, project) {
     $$('img[data-fallback]', root).forEach(function (img) {
       img.addEventListener('error', function () {
-        var kind = img.getAttribute('data-fallback');
-        if (kind === 'cover') img.outerHTML = coverHTML(project || {});
+        if (img.getAttribute('data-fallback') === 'cover') img.outerHTML = coverHTML(project || {});
         else img.remove();
       }, { once: true });
     });
   }
 
-  function cardHTML(p, i) {
-    var m = [];
-    m.push('<span class="cat">' + esc(p.category || 'Project') + '</span>');
-    if (has(p.year)) m.push('<span>' + esc(p.year) + '</span>');
-    m.push('<span>' + String(i + 1).padStart(2, '0') + '</span>');
-
+  function itemHTML(p, i) {
+    var side = [];
+    if (has(p.category)) side.push(esc(p.category));
+    if (has(p.year))     side.push(esc(p.year));
     return '' +
-      '<button class="card reveal' + (p.featured ? ' featured' : '') + '" data-i="' + i +
+      '<button class="work-item reveal' + (p.featured ? ' featured' : '') + '" data-i="' + i +
         '" data-cat="' + esc(p.category || '') + '" aria-haspopup="dialog">' +
-        '<div class="card-media">' +
-          (has(p.status) ? '<span class="card-badge">' + esc(p.status) + '</span>' : '') +
-          mediaHTML(p, i) +
-          '<span class="card-open"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>' +
-        '</div>' +
-        '<div class="card-body">' +
-          '<div class="card-meta">' + m.join('<span aria-hidden="true">·</span>') + '</div>' +
-          '<h3 class="card-title">' + esc(p.title) + '</h3>' +
-          '<p class="card-desc">' + esc(p.summary || '') + '</p>' +
-          (list(p.tags).length
-            ? '<div class="tags">' + list(p.tags).slice(0, 4).map(function (t) {
-                return '<span class="tag">' + esc(t) + '</span>'; }).join('') + '</div>'
-            : '') +
-          '<span class="card-more">Read the story <i class="fa-solid fa-arrow-right"></i></span>' +
+        '<div class="work-media">' + mediaHTML(p) + '</div>' +
+        '<div class="work-cap">' +
+          '<span class="work-title">' + esc(p.title) +
+            (has(p.status) ? '<span class="work-status">' + esc(p.status) + '</span>' : '') +
+          '</span>' +
+          '<span class="work-side">' + side.join(' · ') + '</span>' +
         '</div>' +
       '</button>';
   }
 
   if (grid) {
-    grid.innerHTML = projects.map(cardHTML).join('');
-    $$('.card', grid).forEach(function (card) {
-      wireFallbacks(card, projects[parseInt(card.getAttribute('data-i'), 10)]);
+    grid.innerHTML = projects.map(itemHTML).join('');
+    $$('.work-item', grid).forEach(function (el) {
+      wireFallbacks(el, projects[parseInt(el.getAttribute('data-i'), 10)]);
     });
   }
 
-  /* filters — built automatically from the categories you use */
+  /* filters, built from whatever categories you use */
   var filterBar = document.getElementById('filters');
   if (filterBar && projects.length) {
     var cats = [];
@@ -176,33 +101,33 @@
       var c = has(p.category) ? p.category : 'Other';
       if (cats.indexOf(c) === -1) cats.push(c);
     });
+
     if (cats.length > 1) {
-      var btns = ['<button class="filter-btn active" data-f="all">All<span class="count">' + projects.length + '</span></button>'];
-      cats.forEach(function (c) {
-        var n = projects.filter(function (p) { return (p.category || 'Other') === c; }).length;
-        btns.push('<button class="filter-btn" data-f="' + esc(c) + '">' + esc(c) + '<span class="count">' + n + '</span></button>');
-      });
-      filterBar.innerHTML = btns.join('');
+      filterBar.innerHTML = ['<button class="filter active" data-f="all">All</button>']
+        .concat(cats.map(function (c) {
+          return '<button class="filter" data-f="' + esc(c) + '">' + esc(c) + '</button>';
+        })).join('');
 
       filterBar.addEventListener('click', function (e) {
-        var btn = e.target.closest('.filter-btn');
+        var btn = e.target.closest('.filter');
         if (!btn) return;
-        $$('.filter-btn', filterBar).forEach(function (b) { b.classList.remove('active'); });
+        $$('.filter', filterBar).forEach(function (b) { b.classList.remove('active'); });
         btn.classList.add('active');
         var f = btn.getAttribute('data-f'), shown = 0;
-        $$('.card', grid).forEach(function (card) {
-          var ok = f === 'all' || card.getAttribute('data-cat') === f;
-          card.style.display = ok ? '' : 'none';
+        $$('.work-item', grid).forEach(function (item) {
+          var ok = f === 'all' || item.getAttribute('data-cat') === f;
+          item.style.display = ok ? '' : 'none';
           if (ok) shown++;
         });
         if (emptyEl) emptyEl.hidden = shown > 0;
       });
     } else {
-      filterBar.remove();
+      /* one category only — show the quiet instruction instead of a filter row */
+      filterBar.outerHTML = '<p class="hint">Select a project to see more.</p>';
     }
   }
 
-  /* ── 4. PROJECT MODAL ──────────────────────────────────────────────── */
+  /* ── 5. PROJECT DIALOG ─────────────────────────────────────────────── */
   var modal = document.getElementById('modal');
   var modalBody = document.getElementById('modalBody');
   var lastFocus = null;
@@ -211,13 +136,13 @@
     var p = projects[i];
     if (!p || !modal) return;
 
-    var meta = ['<span class="cat">' + esc(p.category || 'Project') + '</span>'];
-    if (has(p.year))   meta.push('<span>' + esc(p.year) + '</span>');
-    if (has(p.role))   meta.push('<span>' + esc(p.role) + '</span>');
-    if (has(p.status)) meta.push('<span>' + esc(p.status) + '</span>');
+    var meta = [];
+    ['category', 'year', 'role', 'status'].forEach(function (k) {
+      if (has(p[k])) meta.push('<span>' + esc(p[k]) + '</span>');
+    });
 
-    var html = '<div class="m-media">' + mediaHTML(p, i) + '</div><div class="m-body">' +
-      '<div class="m-meta">' + meta.join('') + '</div>' +
+    var html = '<div class="m-media">' + mediaHTML(p) + '</div><div class="m-body">' +
+      (meta.length ? '<div class="m-meta">' + meta.join('') + '</div>' : '') +
       '<h2 class="m-title" id="modalTitle">' + esc(p.title) + '</h2>' +
       (has(p.summary) ? '<p class="m-summary">' + esc(p.summary) + '</p>' : '');
 
@@ -226,8 +151,8 @@
         list(p.highlights).map(function (h) { return '<li>' + esc(h) + '</li>'; }).join('') + '</ul>';
     }
     if (list(p.tags).length) {
-      html += '<p class="m-sub">Skills &amp; tools</p><div class="tags">' +
-        list(p.tags).map(function (t) { return '<span class="tag">' + esc(t) + '</span>'; }).join('') + '</div>';
+      html += '<p class="m-sub">Skills</p><p class="m-tags">' +
+        list(p.tags).map(esc).join('&nbsp; · &nbsp;') + '</p>';
     }
     if (list(p.gallery).length) {
       html += '<p class="m-sub">Gallery</p><div class="m-gallery">' +
@@ -236,10 +161,9 @@
         }).join('') + '</div>';
     }
     if (list(p.links).length) {
-      html += '<div class="m-links">' + list(p.links).map(function (l, n) {
-        return '<a class="btn ' + (n === 0 ? 'btn-solid' : 'btn-outline') + '" href="' + esc(l.url) +
-               '" target="_blank" rel="noopener"><i class="' + esc(l.icon || 'fa-solid fa-arrow-up-right-from-square') +
-               '"></i> ' + esc(l.label || 'Open') + '</a>';
+      html += '<div class="m-links">' + list(p.links).map(function (l) {
+        return '<a class="m-link" href="' + esc(l.url) + '" target="_blank" rel="noopener">' +
+               esc(l.label || 'Open') + '</a>';
       }).join('') + '</div>';
     }
     html += '</div>';
@@ -249,8 +173,8 @@
     modal.hidden = false;
     document.body.classList.add('locked');
     lastFocus = document.activeElement;
-    var closeBtn = document.getElementById('modalClose');
-    if (closeBtn) closeBtn.focus();
+    var close = document.getElementById('modalClose');
+    if (close) close.focus();
   }
 
   function closeProject() {
@@ -262,85 +186,39 @@
   }
 
   if (grid) grid.addEventListener('click', function (e) {
-    var card = e.target.closest('.card');
-    if (card) openProject(parseInt(card.getAttribute('data-i'), 10));
+    var item = e.target.closest('.work-item');
+    if (item) openProject(parseInt(item.getAttribute('data-i'), 10));
   });
   if (modal) modal.addEventListener('click', function (e) {
     if (e.target.hasAttribute('data-close') || e.target.closest('#modalClose')) closeProject();
   });
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') { closeProject(); closeMenu(); }
-    /* keep tabbing inside the dialog while it is open */
-    if (e.key === 'Tab' && modal && !modal.hidden) {
-      var f = $$('a[href], button, [tabindex]:not([tabindex="-1"])', modal)
-                .filter(function (el) { return el.offsetParent !== null; });
-      if (!f.length) return;
-      var first = f[0], last = f[f.length - 1];
-      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-    }
-  });
 
-  /* ── 5. ABOUT ──────────────────────────────────────────────────────── */
+  /* ── 6. ABOUT ──────────────────────────────────────────────────────── */
   var A = D.about || {};
   var portrait = document.getElementById('portrait');
   if (portrait) {
     var fb = '<div class="portrait-fallback">' + esc(P.initials || '') + '</div>';
     if (has(A.photo)) {
       portrait.innerHTML = '<img src="' + esc(A.photo) + '" alt="' + esc(A.photoAlt || P.name || '') + '">';
-      var pimg = portrait.querySelector('img');
-      pimg.addEventListener('error', function () { portrait.innerHTML = fb; }, { once: true });
+      portrait.querySelector('img')
+        .addEventListener('error', function () { portrait.innerHTML = fb; }, { once: true });
     } else {
       portrait.innerHTML = fb;
     }
   }
-  set('facts', list(A.facts).map(function (f) {
-    return '<div class="fact"><dt>' + esc(f.label) + '</dt><dd>' + esc(f.value) + '</dd></div>';
-  }).join(''));
-  set('aboutLead', esc(A.lead || ''));
-  set('aboutBody', list(A.body).map(function (t) { return '<p>' + esc(t) + '</p>'; }).join(''));
-
-  set('skillGroups', list(D.skills).map(function (g) {
-    return '<div class="skill-card"><h4><i class="' + esc(g.icon || 'fa-solid fa-star') + '"></i>' +
-      esc(g.group) + '</h4><ul>' +
-      list(g.items).map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') +
-      '</ul></div>';
+  set('aboutText', list(A.text).map(function (t) { return '<p>' + esc(t) + '</p>'; }).join(''));
+  set('credentials', list(A.credentials).map(function (c) {
+    return '<div class="cred">' +
+      '<dt class="cred-title">' + esc(c.title) + '</dt>' +
+      (has(c.org) ? '<dd class="cred-org">' + esc(c.org) + '</dd>' : '<dd class="cred-org"></dd>') +
+      (has(c.date) ? '<dd class="cred-date">' + esc(c.date) + '</dd>' : '') +
+      '</div>';
   }).join(''));
 
-  /* ── 6. EXPERIENCE + CERTIFICATES ──────────────────────────────────── */
-  set('timeline', list(D.experience).map(function (x) {
-    return '<li class="tl-item reveal' + (x.current ? ' current' : '') + '">' +
-      '<span class="tl-dot"></span>' +
-      '<div class="tl-head"><span class="tl-role">' + esc(x.role) + '</span>' +
-      '<span class="tl-date">' + esc(x.date) + '</span></div>' +
-      (has(x.org)  ? '<span class="tl-org">' + esc(x.org) + '</span>' : '') +
-      (has(x.desc) ? '<p class="tl-desc">' + esc(x.desc) + '</p>' : '') +
-      '</li>';
-  }).join(''));
-
-  var certs = list(D.certifications);
-  if (certs.length) {
-    set('certGrid', certs.map(function (c) {
-      return '<div class="cert reveal"><i class="fa-solid fa-award"></i><div>' +
-        '<span class="cert-title">' + esc(c.title) + '</span>' +
-        '<span class="cert-issuer">' + esc(c.issuer) + (has(c.note) ? ' · ' + esc(c.note) : '') + '</span>' +
-        '</div></div>';
-    }).join(''));
-  } else {
-    ['certHead', 'certGrid'].forEach(function (id) { var el = document.getElementById(id); if (el) el.remove(); });
-  }
-
-  /* ── 7. NOW & NEXT ─────────────────────────────────────────────────── */
-  set('nextGrid', list(D.next).map(function (n) {
-    return '<article class="next-card reveal"><span class="next-state">' + esc(n.state) + '</span>' +
-      '<h3>' + esc(n.title) + '</h3><p>' + esc(n.desc) + '</p></article>';
-  }).join(''));
-
-  /* ── 8. CONTACT ────────────────────────────────────────────────────── */
+  /* ── 7. CONTACT ────────────────────────────────────────────────────── */
   var C = D.contact || {};
-  if (has(C.heading)) set('contactHeading', esc(C.heading));
-  set('contactText', esc(C.text || ''));
-  set('contactNote', esc(C.ctaNote || ''));
+  set('contactLine', esc(C.line || ''));
+  set('contactNote', esc(C.note || ''));
 
   var mail = document.getElementById('contactMail');
   if (mail) {
@@ -349,30 +227,23 @@
   }
 
   set('socials', list(P.socials).map(function (s) {
-    return '<a class="social" href="' + esc(s.url) + '" target="_blank" rel="noopener" ' +
-      'aria-label="' + esc(s.label) + '" title="' + esc(s.label) + '"><i class="' + esc(s.icon) + '"></i></a>';
+    return '<a class="social" href="' + esc(s.url) + '" target="_blank" rel="noopener">' +
+      esc(s.label) + '</a>';
   }).join(''));
 
-  var metaRows = [];
-  if (has(P.location)) metaRows.push(['Location', P.location]);
-  if (has(P.title))    metaRows.push(['Focus', P.title]);
-  if (has(P.availability)) metaRows.push(['Status', P.availability]);
-  set('contactMeta', metaRows.map(function (r) {
-    return '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>';
-  }).join(''));
+  set('colophon', '© ' + new Date().getFullYear() + ' ' + esc(P.name || '') +
+    (has(D.footer && D.footer.note) ? ' · ' + esc(D.footer.note) : ''));
 
-  /* ── 9. THEME TOGGLE ───────────────────────────────────────────────── */
+  /* ── 8. THEME ──────────────────────────────────────────────────────── */
   var root = document.documentElement;
   var themeBtn = document.getElementById('themeToggle');
   if (themeBtn) themeBtn.addEventListener('click', function () {
     var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     root.setAttribute('data-theme', next);
     localStorage.setItem('portfolio-theme', next);
-    var meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', next === 'dark' ? '#080b12' : '#f7f8fa');
   });
 
-  /* ── 10. MOBILE MENU ───────────────────────────────────────────────── */
+  /* ── 9. MENU ───────────────────────────────────────────────────────── */
   var burger = document.getElementById('burger');
   var menu   = document.getElementById('navMenu');
   function closeMenu() {
@@ -389,28 +260,37 @@
     menu.addEventListener('click', function (e) { if (e.target.closest('a')) closeMenu(); });
   }
 
-  /* ── 11. SCROLL: nav state, active link, progress, back-to-top ─────── */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { closeProject(); closeMenu(); }
+    if (e.key === 'Tab' && modal && !modal.hidden) {
+      var f = $$('a[href], button', modal).filter(function (el) { return el.offsetParent !== null; });
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+
+  /* ── 10. SCROLL ────────────────────────────────────────────────────── */
   var nav      = document.getElementById('nav');
-  var progress = document.getElementById('navProgress');
-  var toTop    = document.getElementById('toTop');
-  var navLinks = $$('.nav-link');
-  var sections = navLinks.map(function (l) { return document.querySelector(l.getAttribute('href')); });
+  var opener   = document.getElementById('opener');
+  var navLinks = $$('.nav-link').filter(function (l) { return (l.getAttribute('href') || '').indexOf('#') === 0; });
+  var targets  = navLinks.map(function (l) { return document.querySelector(l.getAttribute('href')); });
   var lastY = 0, ticking = false;
 
   function onScroll() {
     var y = window.scrollY;
+    var past = opener ? y > opener.offsetHeight - 90 : y > 400;
+
     if (nav) {
-      nav.classList.toggle('scrolled', y > 8);
-      nav.classList.toggle('hidden', y > lastY && y > 400 && !(menu && menu.classList.contains('open')));
-    }
-    if (toTop) toTop.classList.toggle('show', y > 700);
-    if (progress) {
-      var max = document.documentElement.scrollHeight - window.innerHeight;
-      progress.style.width = (max > 0 ? (y / max) * 100 : 0) + '%';
+      nav.classList.toggle('solid', past);
+      nav.classList.toggle('on-dark', !past);
+      nav.classList.toggle('up', y > lastY && y > 600 && !(menu && menu.classList.contains('open')));
     }
     var active = -1;
-    sections.forEach(function (s, i) { if (s && y >= s.offsetTop - 140) active = i; });
+    targets.forEach(function (t, i) { if (t && y >= t.offsetTop - 160) active = i; });
     navLinks.forEach(function (l, i) { l.classList.toggle('active', i === active); });
+
     lastY = y;
     ticking = false;
   }
@@ -419,21 +299,17 @@
   }, { passive: true });
   onScroll();
 
-  if (toTop) toTop.addEventListener('click', function () {
-    window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
-  });
-
-  /* ── 12. REVEAL ON SCROLL ──────────────────────────────────────────── */
+  /* ── 11. REVEAL ────────────────────────────────────────────────────── */
   if ('IntersectionObserver' in window && !reduceMotion) {
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
         if (!en.isIntersecting) return;
-        var i = $$('.reveal', en.target.parentElement).indexOf(en.target);
-        en.target.style.transitionDelay = Math.min(i, 5) * 60 + 'ms';
+        var siblings = $$('.reveal', en.target.parentElement);
+        en.target.style.transitionDelay = Math.min(siblings.indexOf(en.target), 4) * 90 + 'ms';
         en.target.classList.add('in');
         io.unobserve(en.target);
       });
-    }, { threshold: .08, rootMargin: '0px 0px -40px 0px' });
+    }, { threshold: .06, rootMargin: '0px 0px -60px 0px' });
     $$('.reveal').forEach(function (el) { io.observe(el); });
   } else {
     $$('.reveal').forEach(function (el) { el.classList.add('in'); });

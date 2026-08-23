@@ -4,26 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- ✏️ EDIT: search-engine text (also update your name in content.js) -->
-  <title>Helia Amini — Engineering &amp; Human-Centred Technology</title>
-  <meta name="description" content="Helia Amini — dual-degree student at TU/e combining Electrical Engineering with Psychology &amp; Technology. Projects in assistive technology, UX research and product design." />
+  <!-- ✏️ EDIT: the text search engines show. Your name/title also live in content.js -->
+  <title>Helia Amini</title>
+  <meta name="description" content="Helia Amini — electrical engineering and human-centred design. Eindhoven University of Technology." />
   <meta name="author" content="Helia Amini" />
-  <meta property="og:title" content="Helia Amini — Engineering &amp; Human-Centred Technology" />
-  <meta property="og:description" content="I design and build technology around the people who use it — from circuits to interfaces." />
+  <meta property="og:title" content="Helia Amini" />
+  <meta property="og:description" content="Electrical engineering and human-centred design." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://heliaamini.com" />
-  <meta name="theme-color" content="#f7f8fa" />
+  <meta name="theme-color" content="#08090b" />
 
-  <!-- Favicon: the little letters in the browser tab. Change HA to your initials. -->
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232f5bff'/%3E%3Ctext x='32' y='43' font-family='Helvetica,Arial,sans-serif' font-size='28' font-weight='700' fill='white' text-anchor='middle'%3EHA%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2308090b'/%3E%3Ctext x='32' y='42' font-family='Helvetica,Arial,sans-serif' font-size='26' font-weight='300' letter-spacing='1' fill='white' text-anchor='middle'%3EHA%3C/text%3E%3C/svg%3E" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@200;300;400;500&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
 
-  <!-- Applies your saved theme before paint, so the page never flashes -->
   <script>
     (function () {
       var t = localStorage.getItem('portfolio-theme');
@@ -34,181 +31,139 @@
 </head>
 <body>
 
-<a class="skip-link" href="#work">Skip to projects</a>
+<a class="skip-link" href="#work">Skip to work</a>
 
-<!-- ══════════════════ NAVIGATION ══════════════════ -->
-<header class="nav" id="nav">
+<!-- ══════════════ NAVIGATION ══════════════ -->
+<header class="nav on-dark" id="nav">
   <div class="wrap nav-inner">
-    <a href="#top" class="logo" id="logo" aria-label="Back to top"></a>
-
+    <a href="#top" class="wordmark" id="wordmark" aria-label="Back to top"></a>
     <nav class="nav-menu" id="navMenu" aria-label="Main">
       <a class="nav-link" href="#work">Work</a>
       <a class="nav-link" href="#about">About</a>
-      <a class="nav-link" href="#experience">Experience</a>
-      <a class="nav-link" href="#next">Now</a>
       <a class="nav-link" href="#contact">Contact</a>
-      <a class="btn btn-sm btn-solid nav-resume" id="navResume" download>
-        <i class="fa-regular fa-file-lines"></i> Résumé
-      </a>
+      <a class="nav-link" id="navResume" download>Résumé</a>
     </nav>
-
     <div class="nav-tools">
-      <button class="icon-btn" id="themeToggle" aria-label="Switch colour theme">
-        <i class="fa-solid fa-sun icon-sun"></i>
-        <i class="fa-solid fa-moon icon-moon"></i>
+      <button class="icon-btn" id="themeToggle" aria-label="Switch between light and dark">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.4v2.2M12 19.4v2.2M4.4 4.4l1.6 1.6M18 18l1.6 1.6M2.4 12h2.2M19.4 12h2.2M4.4 19.6L6 18M18 6l1.6-1.6"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 13.2A8.6 8.6 0 1 1 10.8 3.2a6.7 6.7 0 0 0 10 10z"/></svg>
       </button>
       <button class="icon-btn burger" id="burger" aria-label="Open menu" aria-expanded="false">
         <span></span><span></span>
       </button>
     </div>
   </div>
-  <div class="nav-progress" id="navProgress"></div>
 </header>
 
 <main id="top">
 
-  <!-- ══════════════════ HERO ══════════════════ -->
-  <section class="hero">
-    <div class="hero-glow" aria-hidden="true"></div>
-    <div class="wrap hero-inner">
-      <p class="pill" id="heroPill" hidden><span class="pip"></span><span id="heroPillText"></span></p>
-      <p class="hero-greeting" id="heroGreeting"></p>
-      <h1 class="hero-name" id="heroName"></h1>
-      <p class="hero-title" id="heroTitle"></p>
-      <p class="hero-rotate">
-        <span id="heroRotatePrefix"></span><span class="rotate-word" id="heroRotate"></span><span class="caret" aria-hidden="true"></span>
-      </p>
-      <p class="hero-intro" id="heroIntro"></p>
-      <div class="hero-actions">
-        <a href="#work" class="btn btn-solid">View my work <i class="fa-solid fa-arrow-down"></i></a>
-        <a href="#contact" class="btn btn-outline">Get in touch</a>
+  <!-- ══════════════ OPENER ══════════════ -->
+  <section class="opener" id="opener">
+
+    <!-- The circuit field. Deliberately near-invisible — it should register
+         as texture, not decoration. Opacity is set in styles.css (.circuit). -->
+    <svg class="circuit" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+      <g class="traces" fill="none" stroke-linecap="square">
+        <path id="t1" d="M-40,168 H280 L360,248 H660" pathLength="1000"/>
+        <path id="t2" d="M1480,132 H1180 L1100,212 H860" pathLength="1000"/>
+        <path id="t3" d="M-40,712 H196 L276,632 H556 L636,712 H912" pathLength="1000"/>
+        <path id="t4" d="M1480,772 H1244 L1164,692 H948" pathLength="1000"/>
+        <path id="t5" d="M736,-40 V128 L816,208 V352" pathLength="1000"/>
+        <path id="t6" d="M404,940 V804 L484,724 V572" pathLength="1000"/>
+        <path id="t7" d="M-40,432 H128 L208,352 H392" pathLength="1000"/>
+        <path id="t8" d="M1480,452 H1296 L1216,532 H1032" pathLength="1000"/>
+      </g>
+      <g class="pulses" fill="none" stroke-linecap="round">
+        <use href="#t1" class="pulse p1"/>
+        <use href="#t3" class="pulse p2"/>
+        <use href="#t5" class="pulse p3"/>
+        <use href="#t8" class="pulse p4"/>
+      </g>
+      <g class="vias">
+        <circle cx="360" cy="248" r="2.5"/><circle cx="1100" cy="212" r="2.5"/>
+        <circle cx="636" cy="712" r="2.5"/><circle cx="816" cy="208" r="2.5"/>
+        <circle cx="208" cy="352" r="2.5"/><circle cx="1216" cy="532" r="2.5"/>
+      </g>
+    </svg>
+
+    <div class="wrap opener-inner">
+      <p class="eyebrow" id="openerEyebrow"></p>
+      <h1 class="display" id="openerName"></h1>
+      <p class="opener-line" id="openerLine"></p>
+    </div>
+
+    <a class="scroll-cue" href="#statement" aria-label="Scroll down">
+      <span class="cue-rail"><span class="cue-pulse"></span></span>
+    </a>
+  </section>
+
+  <!-- ══════════════ STATEMENT ══════════════ -->
+  <section class="statement" id="statement">
+    <div class="wrap">
+      <p class="statement-text reveal" id="statementText"></p>
+      <ul class="statement-meta reveal" id="statementMeta"></ul>
+    </div>
+  </section>
+
+  <!-- ══════════════ WORK ══════════════ -->
+  <section class="work" id="work">
+    <div class="wrap">
+      <div class="rule reveal"><span class="node"></span></div>
+      <div class="work-head reveal">
+        <h2 class="label">Selected Work</h2>
+        <nav class="work-filters" id="filters" aria-label="Filter work"></nav>
       </div>
-      <ul class="hero-stats" id="heroStats"></ul>
-    </div>
-    <div class="marquee" aria-hidden="true"><div class="marquee-track" id="marquee"></div></div>
-  </section>
-
-  <!-- ══════════════════ WORK / PROJECTS ══════════════════ -->
-  <section class="section" id="work">
-    <div class="wrap">
-      <header class="sec-head reveal">
-        <span class="sec-num">01</span>
-        <h2 class="sec-title">Selected Work</h2>
-        <p class="sec-sub">Things I have designed, built or researched. Click any card for the full story.</p>
-      </header>
-
-      <div class="filters reveal" id="filters" role="group" aria-label="Filter projects"></div>
-      <div class="grid-projects" id="projectGrid"></div>
-      <p class="empty-note" id="emptyNote" hidden>Nothing here yet — pick another filter.</p>
+      <div class="work-grid" id="workGrid"></div>
+      <p class="empty-note" id="emptyNote" hidden>Nothing under this filter.</p>
     </div>
   </section>
 
-  <!-- ══════════════════ ABOUT ══════════════════ -->
-  <section class="section section-alt" id="about">
+  <!-- ══════════════ ABOUT ══════════════ -->
+  <section class="about" id="about">
     <div class="wrap">
-      <header class="sec-head reveal">
-        <span class="sec-num">02</span>
-        <h2 class="sec-title">About</h2>
-      </header>
-
+      <div class="rule reveal"><span class="node"></span></div>
+      <h2 class="label reveal">About</h2>
       <div class="about-grid">
-        <aside class="about-side reveal">
-          <figure class="portrait" id="portrait"></figure>
-          <dl class="facts" id="facts"></dl>
-        </aside>
-        <div class="about-main reveal">
-          <p class="about-lead" id="aboutLead"></p>
-          <div class="about-body" id="aboutBody"></div>
-          <h3 class="sub-head">Skills</h3>
-          <div class="skill-groups" id="skillGroups"></div>
+        <figure class="portrait reveal" id="portrait"></figure>
+        <div class="about-copy reveal">
+          <div id="aboutText"></div>
+          <dl class="credentials" id="credentials"></dl>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ══════════════════ EXPERIENCE ══════════════════ -->
-  <section class="section" id="experience">
-    <div class="wrap">
-      <header class="sec-head reveal">
-        <span class="sec-num">03</span>
-        <h2 class="sec-title">Experience &amp; Education</h2>
-      </header>
-      <ol class="timeline" id="timeline"></ol>
-
-      <h3 class="sub-head reveal" id="certHead">Certifications</h3>
-      <div class="cert-grid" id="certGrid"></div>
-    </div>
-  </section>
-
-  <!-- ══════════════════ NOW & NEXT ══════════════════ -->
-  <section class="section section-alt" id="next">
-    <div class="wrap">
-      <header class="sec-head reveal">
-        <span class="sec-num">04</span>
-        <h2 class="sec-title">Now &amp; Next</h2>
-        <p class="sec-sub">Where my attention is going.</p>
-      </header>
-      <div class="next-grid" id="nextGrid"></div>
-    </div>
-  </section>
-
-  <!-- ══════════════════ CONTACT ══════════════════ -->
-  <section class="section" id="contact">
-    <div class="wrap">
-      <header class="sec-head reveal">
-        <span class="sec-num">05</span>
-        <h2 class="sec-title" id="contactHeading">Contact</h2>
-      </header>
-
-      <div class="contact-card reveal">
-        <div class="contact-left">
-          <p class="contact-text" id="contactText"></p>
-          <a class="contact-mail" id="contactMail"></a>
-          <p class="contact-note" id="contactNote"></p>
-          <div class="socials" id="socials"></div>
-        </div>
-        <div class="contact-right">
-          <dl class="contact-meta" id="contactMeta"></dl>
-          <a class="btn btn-outline btn-block" id="contactResume" download>
-            <i class="fa-regular fa-file-lines"></i> Download résumé
-          </a>
-        </div>
+  <!-- ══════════════ CONTACT ══════════════ -->
+  <section class="contact" id="contact">
+    <div class="wrap contact-inner">
+      <p class="contact-line reveal" id="contactLine"></p>
+      <a class="contact-mail reveal" id="contactMail"></a>
+      <p class="contact-note reveal" id="contactNote"></p>
+      <div class="contact-foot reveal">
+        <div class="socials" id="socials"></div>
+        <a class="ghost-link" id="contactResume" download>Résumé <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v13M6 12l6 6 6-6"/></svg></a>
       </div>
+      <p class="colophon" id="colophon"></p>
     </div>
   </section>
+
 </main>
 
-<!-- ══════════════════ FOOTER ══════════════════ -->
-<footer class="footer">
-  <div class="wrap footer-inner">
-    <div>
-      <a href="#top" class="logo logo-sm" id="logoFooter" aria-label="Back to top"></a>
-      <p class="footer-tagline" id="footerTagline"></p>
-    </div>
-    <p class="footer-meta">
-      <span id="footerCopy"></span>
-      <span class="dim" id="footerNote"></span>
-    </p>
-  </div>
-</footer>
-
-<!-- ══════════════════ PROJECT DETAIL DIALOG ══════════════════ -->
+<!-- ══════════════ PROJECT DIALOG ══════════════ -->
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
   <div class="modal-backdrop" data-close></div>
   <div class="modal-panel" role="document">
-    <button class="modal-close" id="modalClose" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    <button class="modal-close" id="modalClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     <div class="modal-scroll" id="modalBody"></div>
   </div>
 </div>
 
-<button class="to-top" id="toTop" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></button>
-
 <noscript>
   <div class="wrap noscript">
     <h2>Helia Amini</h2>
-    <p>This portfolio renders its content with JavaScript. Please enable JavaScript,
-       or reach me directly at <a href="mailto:helia@heliaamini.com">helia@heliaamini.com</a>
-       and on <a href="https://linkedin.com/in/helia-amini">LinkedIn</a>.</p>
+    <p>This site needs JavaScript. Reach me at
+      <a href="mailto:helia@heliaamini.com">helia@heliaamini.com</a> or on
+      <a href="https://linkedin.com/in/helia-amini">LinkedIn</a>.</p>
   </div>
 </noscript>
 

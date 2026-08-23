@@ -75,57 +75,31 @@
   var countEl = document.getElementById('workCount');
   if (countEl) countEl.textContent = projects.length + (projects.length === 1 ? ' project' : ' projects');
 
-  if (indexEl) {
-    indexEl.innerHTML = projects.map(function (p, i) {
-      var meta = [];
-      if (has(p.category)) meta.push(esc(p.category));
-      if (has(p.year))     meta.push(esc(p.year));
-      return '<li class="work-row' + (i === 0 ? ' on' : '') + '" data-i="' + i + '">' +
-        '<button class="row-btn" aria-haspopup="dialog">' +
-          '<span class="row-thumb">' + mediaHTML(p) + '</span>' +
-          '<span class="row-num">' + String(i + 1).padStart(2, '0') + '</span>' +
-          '<span class="row-title">' + esc(p.title) +
-            (has(p.status) ? '<span class="row-status">' + esc(p.status) + '</span>' : '') +
+  var spreads = document.getElementById('spreads');
+  if (spreads) {
+    spreads.innerHTML = projects.map(function (p, i) {
+      var line = [];
+      if (has(p.category)) line.push(esc(p.category));
+      if (has(p.year))     line.push(esc(p.year));
+      if (has(p.status))   line.push('<em>' + esc(p.status) + '</em>');
+      return '<article class="spread reveal" data-i="' + i + '">' +
+        '<button class="spread-btn" aria-haspopup="dialog">' +
+          '<span class="spread-media">' + mediaHTML(p) + '</span>' +
+          '<span class="spread-text">' +
+            '<span class="spread-num">' + String(i + 1).padStart(2, '0') + '</span>' +
+            '<span class="spread-title">' + esc(p.title) + '</span>' +
+            (line.length ? '<span class="spread-line">' + line.join(' · ') + '</span>' : '') +
+            (has(p.summary) ? '<span class="spread-sum">' + esc(p.summary) + '</span>' : '') +
+            '<span class="spread-cue">View project</span>' +
           '</span>' +
-          '<span class="row-meta">' + meta.join(' · ') + '</span>' +
-        '</button></li>';
+        '</button></article>';
     }).join('');
-    $$('.work-row', indexEl).forEach(function (row) {
-      wireFallbacks(row, projects[parseInt(row.getAttribute('data-i'), 10)]);
+    $$('.spread', spreads).forEach(function (el) {
+      wireFallbacks(el, projects[parseInt(el.getAttribute('data-i'), 10)]);
     });
-  }
-
-  /* the preview panel: every cover stacked, one visible at a time */
-  if (previewEl) {
-    previewEl.innerHTML = projects.map(function (p, i) {
-      return '<figure' + (i === 0 ? ' class="on"' : '') + ' data-i="' + i + '">' + mediaHTML(p) + '</figure>';
-    }).join('');
-    $$('figure', previewEl).forEach(function (fig) {
-      wireFallbacks(fig, projects[parseInt(fig.getAttribute('data-i'), 10)]);
-    });
-  }
-
-  function activate(i) {
-    if (indexEl) $$('.work-row', indexEl).forEach(function (r) {
-      r.classList.toggle('on', parseInt(r.getAttribute('data-i'), 10) === i);
-    });
-    if (previewEl) $$('figure', previewEl).forEach(function (f) {
-      f.classList.toggle('on', parseInt(f.getAttribute('data-i'), 10) === i);
-    });
-  }
-
-  if (indexEl) {
-    indexEl.addEventListener('mouseover', function (e) {
-      var row = e.target.closest('.work-row');
-      if (row) activate(parseInt(row.getAttribute('data-i'), 10));
-    });
-    indexEl.addEventListener('focusin', function (e) {
-      var row = e.target.closest('.work-row');
-      if (row) activate(parseInt(row.getAttribute('data-i'), 10));
-    });
-    indexEl.addEventListener('click', function (e) {
-      var row = e.target.closest('.work-row');
-      if (row) openProject(parseInt(row.getAttribute('data-i'), 10));
+    spreads.addEventListener('click', function (e) {
+      var art = e.target.closest('.spread');
+      if (art) openProject(parseInt(art.getAttribute('data-i'), 10));
     });
   }
 
@@ -192,12 +166,13 @@
   });
 
   /* ── 5b. SKILLS — datasheet rows ───────────────────────────────────── */
-  set('skillSheet', list(D.skills).map(function (g) {
-    return '<div class="sheet-row reveal">' +
-      '<div class="sheet-group">' + esc(g.group) + '</div>' +
-      '<div class="sheet-items">' +
-        list(g.items).map(function (it) { return '<span>' + esc(it) + '</span>'; }).join('') +
-      '</div></div>';
+  set('caps', list(D.skills).map(function (g, i) {
+    return '<div class="cap reveal">' +
+      '<span class="cap-num">' + String(i + 1).padStart(2, '0') + '</span>' +
+      '<h3 class="cap-title">' + esc(g.group) + '</h3>' +
+      '<ul class="cap-list">' +
+        list(g.items).map(function (it) { return '<li>' + esc(it) + '</li>'; }).join('') +
+      '</ul></div>';
   }).join(''));
 
   /* ── 6. ABOUT ──────────────────────────────────────────────────────── */
@@ -215,10 +190,10 @@
   }
   set('aboutText', list(A.text).map(function (t) { return '<p>' + esc(t) + '</p>'; }).join(''));
   set('credentials', list(A.credentials).map(function (c) {
-    return '<div class="cred">' +
-      '<dt class="cred-title">' + esc(c.title) + '</dt>' +
-      (has(c.org) ? '<dd class="cred-org">' + esc(c.org) + '</dd>' : '<dd class="cred-org"></dd>') +
-      (has(c.date) ? '<dd class="cred-date">' + esc(c.date) + '</dd>' : '') +
+    return '<div class="cred reveal">' +
+      (has(c.date) ? '<span class="cred-date">' + esc(c.date) + '</span>' : '') +
+      '<span class="cred-title">' + esc(c.title) + '</span>' +
+      (has(c.org) ? '<span class="cred-org">' + esc(c.org) + '</span>' : '') +
       '</div>';
   }).join(''));
 

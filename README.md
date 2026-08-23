@@ -13,7 +13,8 @@ A static site. No frameworks, no build step, no npm.
 | Change my **name / email**  | `content.js`   | section `[1]` |
 | Change the **first screen** | `content.js`   | section `[2]` |
 | Rewrite the **big line**    | `content.js`   | section `[3]` |
-| Edit **About / credentials**| `content.js`   | section `[5]` |
+| Edit **skills**             | `content.js`   | section `[5]` |
+| Edit **About / credentials**| `content.js`   | section `[6]` |
 | Add a **photo**             | `assets/`      | then name it in `content.js` |
 | Change the **accent colour**| `css/styles.css` | `--accent` at the top |
 
@@ -23,20 +24,18 @@ You should never need to touch `index.html`, `css/styles.css` or `js/main.js`.
 
 ## 🖤 About this design
 
-The site is built on restraint. It opens on a black screen with your name and
-one sentence, then hands over to your work.
+Near-black base, solid panels, large readable type. Dark is the intended look —
+visitors can switch to light with the toggle, but the opener and contact screens
+stay dark in both because that framing is art-directed.
 
-**The empty space is doing the work.** It is what makes it feel expensive.
-Every sentence you add takes some of that away. If you can say it in five
-words, say it in five. The one place to actually write is the statement in
-section `[3]` — two sentences, no more.
+Projects are a gallery of framed tiles. Set `featured: true` on a project and
+its tile spans two columns with a wider image.
 
-There is a faint circuit pattern behind your name and a thin line that lights
-up when someone hovers a project. That is the entire electrical motif, and it
-is deliberately almost invisible. To remove it, set `.circuit { opacity: 0 }`
-in `css/styles.css`.
-
----
+The opener is built from layers — drifting fields of coloured light, a circuit
+trace pattern with pulses running along it, a vignette and film grain. That is
+what gives it depth. To calm the circuitry, lower the opacity on
+`.circuit .traces path` in `css/styles.css`; to remove the coloured light,
+delete the `<span class="glow">` elements from `index.html`.
 
 ## ⭐ Adding a project
 

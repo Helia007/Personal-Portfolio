@@ -35,9 +35,12 @@
 
   /* ── 2. OPENER ─────────────────────────────────────────────────────── */
   var O = D.opener || {};
-  set('openerEyebrow', esc(O.eyebrow || P.location || ''));
-  set('openerName',    esc(P.name || ''));
-  set('openerLine',    esc(O.line || ''));
+  set('openerIndex', esc(O.index || ''));
+  set('openerName',  esc(P.name || ''));
+  set('openerLine',  esc(O.line || ''));
+  set('openerMeta', list(O.meta).map(function (m) {
+    return '<div><dt>' + esc(m.label) + '</dt><dd>' + esc(m.value) + '</dd></div>';
+  }).join(''));
 
   /* ── 3. STATEMENT ──────────────────────────────────────────────────── */
   var S = D.statement || {};
@@ -47,19 +50,19 @@
            '<span class="meta-label">' + esc(m.label) + '</span></li>';
   }).join(''));
 
-  /* ── 4. WORK ───────────────────────────────────────────────────────── */
+  /* ── 4. WORK — a numbered index with a preview that follows it ────── */
   var projects = list(D.projects).filter(function (p) { return has(p.title); });
-  var grid     = document.getElementById('workGrid');
-  var emptyEl  = document.getElementById('emptyNote');
+  var indexEl   = document.getElementById('workIndex');
+  var previewEl = document.getElementById('workPreview');
 
   function coverHTML(p) {
-    return '<div class="work-cover"><span>' + esc(p.category || 'Project') + '</span></div>';
+    return '<div class="cover"><span>' + esc(p.category || 'Project') + '</span></div>';
   }
   function mediaHTML(p) {
     if (!has(p.image)) return coverHTML(p);
     return '<img src="' + esc(p.image) + '" alt="' + esc(p.title) + '" loading="lazy" data-fallback="cover">';
   }
-  /* a wrong filename falls back to the placeholder instead of a broken image */
+  /* a wrong filename falls back to the drawn cover rather than breaking */
   function wireFallbacks(root, project) {
     $$('img[data-fallback]', root).forEach(function (img) {
       img.addEventListener('error', function () {
@@ -69,62 +72,35 @@
     });
   }
 
-  function itemHTML(p, i) {
-    var side = [];
-    if (has(p.category)) side.push(esc(p.category));
-    if (has(p.year))     side.push(esc(p.year));
-    return '' +
-      '<button class="work-item reveal' + (p.featured ? ' featured' : '') + '" data-i="' + i +
-        '" data-cat="' + esc(p.category || '') + '" aria-haspopup="dialog">' +
-        '<div class="work-media">' + mediaHTML(p) + '</div>' +
-        '<div class="work-cap">' +
-          '<span class="work-title">' + esc(p.title) +
-            (has(p.status) ? '<span class="work-status">' + esc(p.status) + '</span>' : '') +
-          '</span>' +
-          '<span class="work-side">' + side.join(' · ') + '</span>' +
-        '</div>' +
-      '</button>';
-  }
+  var countEl = document.getElementById('workCount');
+  if (countEl) countEl.textContent = projects.length + (projects.length === 1 ? ' project' : ' projects');
 
-  if (grid) {
-    grid.innerHTML = projects.map(itemHTML).join('');
-    $$('.work-item', grid).forEach(function (el) {
+  var gallery = document.getElementById('gallery');
+  if (gallery) {
+    gallery.innerHTML = projects.map(function (p, i) {
+      var cat = [];
+      if (has(p.category)) cat.push(esc(p.category));
+      if (has(p.year))     cat.push(esc(p.year));
+      return '<article class="tile reveal' + (p.featured ? ' wide' : '') + '" data-i="' + i + '">' +
+        '<button class="tile-btn" aria-haspopup="dialog">' +
+          '<span class="tile-media">' +
+            (has(p.status) ? '<span class="tile-badge">' + esc(p.status) + '</span>' : '') +
+            mediaHTML(p) +
+          '</span>' +
+          '<span class="tile-body">' +
+            '<span class="tile-title">' + esc(p.title) + '</span>' +
+            (cat.length ? '<span class="tile-cat">' + cat.join(' · ') + '</span>' : '') +
+            '<span class="tile-cue">View project</span>' +
+          '</span>' +
+        '</button></article>';
+    }).join('');
+    $$('.tile', gallery).forEach(function (el) {
       wireFallbacks(el, projects[parseInt(el.getAttribute('data-i'), 10)]);
     });
-  }
-
-  /* filters, built from whatever categories you use */
-  var filterBar = document.getElementById('filters');
-  if (filterBar && projects.length) {
-    var cats = [];
-    projects.forEach(function (p) {
-      var c = has(p.category) ? p.category : 'Other';
-      if (cats.indexOf(c) === -1) cats.push(c);
+    gallery.addEventListener('click', function (e) {
+      var t = e.target.closest('.tile');
+      if (t) openProject(parseInt(t.getAttribute('data-i'), 10));
     });
-
-    if (cats.length > 1) {
-      filterBar.innerHTML = ['<button class="filter active" data-f="all">All</button>']
-        .concat(cats.map(function (c) {
-          return '<button class="filter" data-f="' + esc(c) + '">' + esc(c) + '</button>';
-        })).join('');
-
-      filterBar.addEventListener('click', function (e) {
-        var btn = e.target.closest('.filter');
-        if (!btn) return;
-        $$('.filter', filterBar).forEach(function (b) { b.classList.remove('active'); });
-        btn.classList.add('active');
-        var f = btn.getAttribute('data-f'), shown = 0;
-        $$('.work-item', grid).forEach(function (item) {
-          var ok = f === 'all' || item.getAttribute('data-cat') === f;
-          item.style.display = ok ? '' : 'none';
-          if (ok) shown++;
-        });
-        if (emptyEl) emptyEl.hidden = shown > 0;
-      });
-    } else {
-      /* one category only — show the quiet instruction instead of a filter row */
-      filterBar.outerHTML = '<p class="hint">Select a project to see more.</p>';
-    }
   }
 
   /* ── 5. PROJECT DIALOG ─────────────────────────────────────────────── */
@@ -151,8 +127,8 @@
         list(p.highlights).map(function (h) { return '<li>' + esc(h) + '</li>'; }).join('') + '</ul>';
     }
     if (list(p.tags).length) {
-      html += '<p class="m-sub">Skills</p><p class="m-tags">' +
-        list(p.tags).map(esc).join('&nbsp; · &nbsp;') + '</p>';
+      html += '<p class="m-sub">Skills</p><div class="m-tags">' +
+        list(p.tags).map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('') + '</div>';
     }
     if (list(p.gallery).length) {
       html += '<p class="m-sub">Gallery</p><div class="m-gallery">' +
@@ -185,13 +161,18 @@
     if (lastFocus) lastFocus.focus();
   }
 
-  if (grid) grid.addEventListener('click', function (e) {
-    var item = e.target.closest('.work-item');
-    if (item) openProject(parseInt(item.getAttribute('data-i'), 10));
-  });
   if (modal) modal.addEventListener('click', function (e) {
     if (e.target.hasAttribute('data-close') || e.target.closest('#modalClose')) closeProject();
   });
+
+  /* ── 5b. SKILLS — datasheet rows ───────────────────────────────────── */
+  set('caps', list(D.skills).map(function (g) {
+    return '<div class="cap reveal">' +
+      '<h3 class="cap-title">' + esc(g.group) + '</h3>' +
+      '<ul class="cap-list">' +
+        list(g.items).map(function (it) { return '<li>' + esc(it) + '</li>'; }).join('') +
+      '</ul></div>';
+  }).join(''));
 
   /* ── 6. ABOUT ──────────────────────────────────────────────────────── */
   var A = D.about || {};
@@ -208,10 +189,10 @@
   }
   set('aboutText', list(A.text).map(function (t) { return '<p>' + esc(t) + '</p>'; }).join(''));
   set('credentials', list(A.credentials).map(function (c) {
-    return '<div class="cred">' +
-      '<dt class="cred-title">' + esc(c.title) + '</dt>' +
-      (has(c.org) ? '<dd class="cred-org">' + esc(c.org) + '</dd>' : '<dd class="cred-org"></dd>') +
-      (has(c.date) ? '<dd class="cred-date">' + esc(c.date) + '</dd>' : '') +
+    return '<div class="cred reveal">' +
+      (has(c.date) ? '<span class="cred-date">' + esc(c.date) + '</span>' : '') +
+      '<span class="cred-title">' + esc(c.title) + '</span>' +
+      (has(c.org) ? '<span class="cred-org">' + esc(c.org) + '</span>' : '') +
       '</div>';
   }).join(''));
 

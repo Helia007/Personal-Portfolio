@@ -24,26 +24,18 @@ You should never need to touch `index.html`, `css/styles.css` or `js/main.js`.
 
 ## 🖤 About this design
 
-The site is built on restraint. It opens on a black screen with your name and
-one sentence, then hands over to your work.
+Near-black base, solid panels, large readable type. Dark is the intended look —
+visitors can switch to light with the toggle, but the opener and contact screens
+stay dark in both because that framing is art-directed.
 
-**The empty space is doing the work.** It is what makes it feel expensive.
-Every sentence you add takes some of that away. If you can say it in five
-words, say it in five. The one place to actually write is the statement in
-section `[3]` — two sentences, no more.
+Projects are a gallery of framed tiles. Set `featured: true` on a project and
+its tile spans two columns with a wider image.
 
-The opener is built from four stacked layers — drifting fields of coloured
-light, a circuit trace pattern with pulses travelling along it, a vignette and
-film grain. That is what gives it depth rather than looking like a black
-rectangle. To calm the circuitry, lower the opacity on
+The opener is built from layers — drifting fields of coloured light, a circuit
+trace pattern with pulses running along it, a vignette and film grain. That is
+what gives it depth. To calm the circuitry, lower the opacity on
 `.circuit .traces path` in `css/styles.css`; to remove the coloured light,
 delete the `<span class="glow">` elements from `index.html`.
-
-Projects are laid out as a numbered index with a preview panel that follows
-whichever row you point at. Hovering a row shifts its title and draws an
-accent line beneath it.
-
----
 
 ## ⭐ Adding a project
 

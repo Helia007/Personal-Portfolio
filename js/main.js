@@ -75,31 +75,31 @@
   var countEl = document.getElementById('workCount');
   if (countEl) countEl.textContent = projects.length + (projects.length === 1 ? ' project' : ' projects');
 
-  var spreads = document.getElementById('spreads');
-  if (spreads) {
-    spreads.innerHTML = projects.map(function (p, i) {
-      var line = [];
-      if (has(p.category)) line.push(esc(p.category));
-      if (has(p.year))     line.push(esc(p.year));
-      if (has(p.status))   line.push('<em>' + esc(p.status) + '</em>');
-      return '<article class="spread reveal" data-i="' + i + '">' +
-        '<button class="spread-btn" aria-haspopup="dialog">' +
-          '<span class="spread-media">' + mediaHTML(p) + '</span>' +
-          '<span class="spread-text">' +
-            '<span class="spread-num">' + String(i + 1).padStart(2, '0') + '</span>' +
-            '<span class="spread-title">' + esc(p.title) + '</span>' +
-            (line.length ? '<span class="spread-line">' + line.join(' · ') + '</span>' : '') +
-            (has(p.summary) ? '<span class="spread-sum">' + esc(p.summary) + '</span>' : '') +
-            '<span class="spread-cue">View project</span>' +
+  var gallery = document.getElementById('gallery');
+  if (gallery) {
+    gallery.innerHTML = projects.map(function (p, i) {
+      var cat = [];
+      if (has(p.category)) cat.push(esc(p.category));
+      if (has(p.year))     cat.push(esc(p.year));
+      return '<article class="tile reveal' + (p.featured ? ' wide' : '') + '" data-i="' + i + '">' +
+        '<button class="tile-btn" aria-haspopup="dialog">' +
+          '<span class="tile-media">' +
+            (has(p.status) ? '<span class="tile-badge">' + esc(p.status) + '</span>' : '') +
+            mediaHTML(p) +
+          '</span>' +
+          '<span class="tile-body">' +
+            '<span class="tile-title">' + esc(p.title) + '</span>' +
+            (cat.length ? '<span class="tile-cat">' + cat.join(' · ') + '</span>' : '') +
+            '<span class="tile-cue">View project</span>' +
           '</span>' +
         '</button></article>';
     }).join('');
-    $$('.spread', spreads).forEach(function (el) {
+    $$('.tile', gallery).forEach(function (el) {
       wireFallbacks(el, projects[parseInt(el.getAttribute('data-i'), 10)]);
     });
-    spreads.addEventListener('click', function (e) {
-      var art = e.target.closest('.spread');
-      if (art) openProject(parseInt(art.getAttribute('data-i'), 10));
+    gallery.addEventListener('click', function (e) {
+      var t = e.target.closest('.tile');
+      if (t) openProject(parseInt(t.getAttribute('data-i'), 10));
     });
   }
 
@@ -127,8 +127,8 @@
         list(p.highlights).map(function (h) { return '<li>' + esc(h) + '</li>'; }).join('') + '</ul>';
     }
     if (list(p.tags).length) {
-      html += '<p class="m-sub">Skills</p><p class="m-tags">' +
-        list(p.tags).map(esc).join('&nbsp; · &nbsp;') + '</p>';
+      html += '<p class="m-sub">Skills</p><div class="m-tags">' +
+        list(p.tags).map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('') + '</div>';
     }
     if (list(p.gallery).length) {
       html += '<p class="m-sub">Gallery</p><div class="m-gallery">' +
@@ -166,9 +166,8 @@
   });
 
   /* ── 5b. SKILLS — datasheet rows ───────────────────────────────────── */
-  set('caps', list(D.skills).map(function (g, i) {
+  set('caps', list(D.skills).map(function (g) {
     return '<div class="cap reveal">' +
-      '<span class="cap-num">' + String(i + 1).padStart(2, '0') + '</span>' +
       '<h3 class="cap-title">' + esc(g.group) + '</h3>' +
       '<ul class="cap-list">' +
         list(g.items).map(function (it) { return '<li>' + esc(it) + '</li>'; }).join('') +

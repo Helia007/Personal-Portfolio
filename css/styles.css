@@ -334,7 +334,7 @@ h1, h2, h3, h4 { font-family: var(--f-display); font-weight: 600; line-height: 1
 }
 .section .tl-dot { background: var(--bg); }
 .tl-item.current .tl-dot { border-color: var(--accent); background: var(--accent); box-shadow: 0 0 0 5px var(--accent-soft); }
-.tl-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: .5rem 1rem; justify-content: space-between; }
+.tl-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: .5rem 1rem; justify-content: space-between; max-width: 76ch; }
 .tl-role { font-family: var(--f-display); font-size: 1.08rem; font-weight: 600; }
 .tl-date { font-family: var(--f-mono); font-size: .8rem; color: var(--text-3); white-space: nowrap; }
 .tl-org { color: var(--accent); font-size: .92rem; font-weight: 500; }

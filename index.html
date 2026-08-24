@@ -12,7 +12,7 @@
   <meta property="og:description" content="Electrical engineering and human-centred design." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://heliaamini.com" />
-  <meta name="theme-color" content="#08090c" />
+  <meta name="theme-color" content="#ffffff" />
 
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2306070a'/%3E%3Ctext x='32' y='42' font-family='Helvetica,Arial,sans-serif' font-size='26' font-weight='300' fill='white' text-anchor='middle'%3EHA%3C/text%3E%3C/svg%3E" />
 
@@ -24,7 +24,7 @@
   <script>
     (function () {
       var t = localStorage.getItem('portfolio-theme');
-      if (!t) t = 'dark';   // dark is the intended look; visitors can switch
+      if (!t) t = 'light';  // white body is the intended look; visitors can switch
       document.documentElement.setAttribute('data-theme', t);
     })();
   </script>
@@ -38,9 +38,9 @@
   <div class="shell nav-inner">
     <a href="#top" class="wordmark" id="wordmark" aria-label="Back to top"></a>
     <nav class="nav-menu" id="navMenu" aria-label="Main">
+      <a class="nav-link" href="#about">About</a>
       <a class="nav-link" href="#work">Work</a>
       <a class="nav-link" href="#skills">Skills</a>
-      <a class="nav-link" href="#about">About</a>
       <a class="nav-link" href="#contact">Contact</a>
       <a class="nav-link nav-cv" id="navResume" download>Résumé</a>
     </nav>
@@ -113,54 +113,41 @@
 
   </section>
 
-  <!-- ══════════════ STATEMENT ══════════════ -->
-  <section class="statement" id="statement">
-    <div class="shell statement-grid">
-      <p class="statement-text reveal" id="statementText"></p>
-      <ul class="statement-meta reveal" id="statementMeta"></ul>
+  <!-- ══════════════ ABOUT — first thing after the cover ══════════════ -->
+  <section class="chapter-section about" id="about">
+    <div class="shell">
+      <p class="lead reveal" id="aboutLead"></p>
+      <div class="about-layout">
+        <figure class="portrait reveal" id="portrait"></figure>
+        <div class="about-copy reveal" id="aboutText"></div>
+      </div>
     </div>
   </section>
 
-  <!-- ══════════════ WORK — index on the left, live preview on the right ══════════════ -->
+  <!-- ══════════════ WORK — the gallery ══════════════ -->
   <section class="chapter-section work" id="work">
     <div class="shell">
       <header class="chapter reveal">
-        <span class="chapter-num">01</span>
         <h2 class="chapter-title">Work</h2>
         <span class="chapter-note" id="workCount"></span>
       </header>
-
+      <div class="filters reveal" id="filters" role="group" aria-label="Filter projects"></div>
       <div class="gallery" id="gallery"></div>
       <p class="empty-note" id="emptyNote" hidden>Nothing under this filter.</p>
     </div>
   </section>
 
-  <!-- ══════════════ SKILLS — a datasheet ══════════════ -->
+  <!-- ══════════════ SKILLS + CREDENTIALS ══════════════ -->
   <section class="chapter-section skills" id="skills">
     <div class="shell">
       <header class="chapter reveal">
-        <span class="chapter-num">02</span>
-        <h2 class="chapter-title">Capabilities</h2>
+        <h2 class="chapter-title">Skills</h2>
       </header>
       <div class="caps" id="caps"></div>
-    </div>
-  </section>
 
-  <!-- ══════════════ ABOUT ══════════════ -->
-  <section class="chapter-section about" id="about">
-    <div class="shell">
       <header class="chapter reveal">
-        <span class="chapter-num">03</span>
-        <h2 class="chapter-title">About</h2>
+        <h2 class="chapter-title">Education &amp; Experience</h2>
       </header>
-      <div class="about-layout">
-        <div class="about-figure reveal">
-          <figure class="portrait" id="portrait"></figure>
-        </div>
-        <div class="about-copy reveal">
-          <div id="aboutText"></div>
-        </div>
-      </div>
       <div class="creds" id="credentials"></div>
     </div>
   </section>

@@ -42,16 +42,11 @@
     return '<div><dt>' + esc(m.label) + '</dt><dd>' + esc(m.value) + '</dd></div>';
   }).join(''));
 
-  /* ── 3. STATEMENT ──────────────────────────────────────────────────── */
-  var S = D.statement || {};
-  set('statementText', esc(S.text || ''));
-  set('statementMeta', list(S.meta).map(function (m) {
-    return '<li><span class="meta-value">' + esc(m.value) + '</span>' +
-           '<span class="meta-label">' + esc(m.label) + '</span></li>';
-  }).join(''));
-
   /* ── 4. WORK — a numbered index with a preview that follows it ────── */
   var projects = list(D.projects).filter(function (p) { return has(p.title); });
+  /* featured projects are hung first; every tile is the same size */
+  projects = projects.filter(function (p) { return p.featured; })
+              .concat(projects.filter(function (p) { return !p.featured; }));
   var indexEl   = document.getElementById('workIndex');
   var previewEl = document.getElementById('workPreview');
 
@@ -81,7 +76,7 @@
       var cat = [];
       if (has(p.category)) cat.push(esc(p.category));
       if (has(p.year))     cat.push(esc(p.year));
-      return '<article class="tile reveal' + (p.featured ? ' wide' : '') + '" data-i="' + i + '">' +
+      return '<article class="tile reveal" data-i="' + i + '">' +
         '<button class="tile-btn" aria-haspopup="dialog">' +
           '<span class="tile-media">' +
             (has(p.status) ? '<span class="tile-badge">' + esc(p.status) + '</span>' : '') +
@@ -90,7 +85,6 @@
           '<span class="tile-body">' +
             '<span class="tile-title">' + esc(p.title) + '</span>' +
             (cat.length ? '<span class="tile-cat">' + cat.join(' · ') + '</span>' : '') +
-            '<span class="tile-cue">View project</span>' +
           '</span>' +
         '</button></article>';
     }).join('');
@@ -101,6 +95,41 @@
       var t = e.target.closest('.tile');
       if (t) openProject(parseInt(t.getAttribute('data-i'), 10));
     });
+  }
+
+  /* filters, built from whatever categories you actually use */
+  var filterBar = document.getElementById('filters');
+  var emptyEl   = document.getElementById('emptyNote');
+  if (filterBar && gallery) {
+    var cats = [];
+    projects.forEach(function (p) {
+      var c = has(p.category) ? p.category : 'Other';
+      if (cats.indexOf(c) === -1) cats.push(c);
+    });
+
+    if (cats.length > 1) {
+      filterBar.innerHTML = ['<button class="filter is-on" data-f="all">All</button>']
+        .concat(cats.map(function (c) {
+          return '<button class="filter" data-f="' + esc(c) + '">' + esc(c) + '</button>';
+        })).join('');
+
+      filterBar.addEventListener('click', function (e) {
+        var btn = e.target.closest('.filter');
+        if (!btn) return;
+        $$('.filter', filterBar).forEach(function (b) { b.classList.remove('is-on'); });
+        btn.classList.add('is-on');
+        var f = btn.getAttribute('data-f'), shown = 0;
+        $$('.tile', gallery).forEach(function (tile) {
+          var p = projects[parseInt(tile.getAttribute('data-i'), 10)] || {};
+          var ok = f === 'all' || (has(p.category) ? p.category : 'Other') === f;
+          tile.hidden = !ok;
+          if (ok) shown++;
+        });
+        if (emptyEl) emptyEl.hidden = shown > 0;
+      });
+    } else {
+      filterBar.remove();          /* one category only — no point showing a filter */
+    }
   }
 
   /* ── 5. PROJECT DIALOG ─────────────────────────────────────────────── */
@@ -187,6 +216,7 @@
       portrait.innerHTML = fb;
     }
   }
+  set('aboutLead', esc(A.lead || ''));
   set('aboutText', list(A.text).map(function (t) { return '<p>' + esc(t) + '</p>'; }).join(''));
   set('credentials', list(A.credentials).map(function (c) {
     return '<div class="cred reveal">' +

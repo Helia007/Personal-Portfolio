@@ -9,12 +9,12 @@ A static site. No frameworks, no build step, no npm.
 
 | I want to…                  | Open           | Look for      |
 |-----------------------------|----------------|---------------|
-| Add or edit a **project**   | `content.js`   | section `[4]` |
-| Change my **name / email**  | `content.js`   | section `[1]` |
-| Change the **first screen** | `content.js`   | section `[2]` |
-| Rewrite the **big line**    | `content.js`   | section `[3]` |
-| Edit **skills**             | `content.js`   | section `[5]` |
-| Edit **About / credentials**| `content.js`   | section `[6]` |
+| Add or edit a **project**    | `content.js`   | section `[3]` |
+| Change my **name / email**   | `content.js`   | section `[1]` |
+| Change the **cover**         | `content.js`   | section `[2]` |
+| Rewrite the **big line**     | `content.js`   | `about.lead`  |
+| Edit **skills**              | `content.js`   | section `[4]` |
+| Edit **About / credentials** | `content.js`   | section `[5]` |
 | Add a **photo**             | `assets/`      | then name it in `content.js` |
 | Change the **accent colour**| `css/styles.css` | `--accent` at the top |
 
@@ -24,18 +24,28 @@ You should never need to touch `index.html`, `css/styles.css` or `js/main.js`.
 
 ## 🖤 About this design
 
-Near-black base, solid panels, large readable type. Dark is the intended look —
-visitors can switch to light with the toggle, but the opener and contact screens
-stay dark in both because that framing is art-directed.
+A dark cover, a white page, a dark close. The cover and contact screens stay
+dark in both themes because that framing is art-directed; everything between
+is white and stays out of the way of your work.
 
-Projects are a gallery of framed tiles. Set `featured: true` on a project and
-its tile spans two columns with a wider image.
+The order is: **cover → about → work → skills → contact.** People meet you,
+then your projects, then the detail.
 
-The opener is built from layers — drifting fields of coloured light, a circuit
-trace pattern with pulses running along it, a vignette and film grain. That is
-what gives it depth. To calm the circuitry, lower the opacity on
-`.circuit .traces path` in `css/styles.css`; to remove the coloured light,
-delete the `<span class="glow">` elements from `index.html`.
+Work is a museum grid — every tile the same size (4:3), evenly hung, caption
+beneath. `featured: true` puts a project first in the grid rather than making
+it bigger, so the wall stays even.
+
+Filter buttons build themselves from whatever `category` values you use. With
+only one category they disappear on their own.
+
+The cover is built from layers: drifting fields of teal light, a circuit trace
+pattern with pulses running along it, a vignette and film grain. To calm the
+circuitry, lower the opacity on `.circuit .traces path` in `css/styles.css`;
+to remove the light, delete the `<span class="glow">` elements from
+`index.html`.
+
+Accent colour is deep teal (`--accent`), used for links, hover states and the
+status badge — nothing else.
 
 ## ⭐ Adding a project
 

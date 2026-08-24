@@ -33,12 +33,12 @@ profile: {
   name:     'Helia Amini',
   initials: 'HA',                          // used for the logo and as a photo fallback
   location: 'Eindhoven, Netherlands',
-  email:    'helia@heliaamini.com',        // ← your real email
+  email:    'amini.helia07@gmail.com',        // ← your real email
   resume:   'assets/resume.pdf',           // ← replace that file with your CV
 
   // Shown as small text links at the bottom. Add or delete lines freely.
   socials: [
-    { label: 'LinkedIn', url: 'https://linkedin.com/in/helia-amini' },
+    { label: 'LinkedIn', url: 'https://nl.linkedin.com/in/helia-amini-092a9027a' },
     { label: 'GitHub',   url: 'https://github.com/Helia007' },
   ],
 },
@@ -48,12 +48,12 @@ profile: {
    ═══════════════════════════════════════════════════════════════════════════ */
 opener: {
   index: 'Portfolio — 2026',               // the small rotated label on the left edge
-  line:  'Electrical engineering and human-centred design.',
+  line:  ' ',
 
   // The three columns under your name. Delete one to show two.
   meta: [
     { label: 'Based in', value: 'Eindhoven, NL' },
-    { label: 'Reading',  value: 'EE + Psychology & Technology, TU/e' },
+    { label: 'Education',  value: 'EE + Psychology & Technology, TU/e' },
     { label: 'Status',   value: 'Open to internships' },
   ],
 },
@@ -103,54 +103,16 @@ projects: [
     category: 'Engineering',
     year:     '2024',
     role:     'Concept, CAD and prototyping',
-    status:   'In progress',
-    featured: true,
+    status:   'Complete',
+    featured: false,
     summary:  'A learning device built with former LightHouse school members in The Hague, closing the gap for visually impaired children in mainstream classrooms.',
     image:    '',
     gallery:  [],
-    tags:     ['Product Development', 'CAD', 'Accessibility'],
+    tags:     ['Product Development', 'CAD', 'Inclusive design'],
     highlights: [
       'Interviewed teachers and specialists to find where existing classroom material fails.',
       'Turned those findings into a physical concept, iterated across several CAD versions.',
       'Building toward a prototype for real classroom testing.',
-    ],
-    links: [],
-  },
-
-  {
-    title:    'Operant Conditioning in Digital Products',
-    category: 'Research',
-    year:     '2025',
-    role:     'Independent research',
-    status:   '',
-    featured: false,
-    summary:  'How apps use reinforcement schedules to shape behaviour — and where the line sits between helpful design and manipulation.',
-    image:    '',
-    gallery:  [],
-    tags:     ['Behavioural Science', 'UX Research'],
-    highlights: [
-      'Mapped common product mechanics onto classical reinforcement schedules.',
-      'Argued where persuasive design becomes manipulation.',
-    ],
-    links: [
-      { label: 'Read on LinkedIn', url: 'https://linkedin.com/in/helia-amini' },
-    ],
-  },
-
-  {
-    title:    'Engineering Inventory System',
-    category: 'Engineering',
-    year:     '2023',
-    role:     'Engineering intern, Shell',
-    status:   '',
-    featured: false,
-    summary:  'Inventory tracking and component classification for the mechanical engineering department at Shell, Amsterdam.',
-    image:    '',
-    gallery:  [],
-    tags:     ['Systems', 'Documentation'],
-    highlights: [
-      'Worked inside a multidisciplinary engineering team on live industrial processes.',
-      'Delivered documentation that improved component traceability.',
     ],
     links: [],
   },
@@ -162,33 +124,18 @@ projects: [
     role:     'Design and front-end build',
     status:   '',
     featured: false,
-    summary:  'Designed and coded from scratch — content-driven, responsive, and built so the whole site updates from a single file.',
+    summary:  'Designed and coded from scratch with assistive technologies.',
     image:    '',
     gallery:  [],
     tags:     ['HTML / CSS', 'JavaScript', 'UX Design'],
     highlights: [
-      'Every section renders from one plain-text file. No frameworks, no build step.',
-      'Full keyboard navigation and reduced-motion support.',
+      'Every section renders from one plain-text file.',
     ],
     links: [
       { label: 'Source', url: 'https://github.com/Helia007' },
     ],
   },
 
-  {
-    title:    'Personal Brand Identity',
-    category: 'Design',
-    year:     '2025',
-    role:     'Visual identity',
-    status:   '',
-    featured: false,
-    summary:  'A personal logo and visual system used across professional platforms.',
-    image:    '',
-    gallery:  [],
-    tags:     ['Branding', 'Visual Design'],
-    highlights: [],
-    links: [],
-  },
 
   /* ⬆️ ADD YOUR NEXT PROJECT RIGHT HERE — paste the template from above ⬆️ */
 
@@ -204,15 +151,15 @@ skills: [
   },
   {
     group: 'Software & Data',
-    items: ['Python', 'HTML / CSS / JavaScript', 'Node.js', 'Data Analysis'],
+    items: ['Python', 'R programming', 'HTML / CSS / JavaScript', 'Node.js', 'Data Analysis'],
   },
   {
     group: 'Human Factors',
-    items: ['UX Research', 'Human-Technology Interaction', 'Behavioural Science', 'User Testing'],
+    items: ['UX Research', 'User Testing', 'Market research'],
   },
   {
     group: 'Working Practice',
-    items: ['Technical Writing', 'Public Speaking', 'Entrepreneurship', 'English · Dutch · Farsi'],
+    items: ['Technical Writing', 'Public Speaking', 'Entrepreneurship', 'English · Dutch · Farsi · Portoguese · Spanish'],
   },
 ],
 
@@ -228,7 +175,7 @@ about: {
 
   text: [
     'I study Electrical Engineering alongside Psychology & Technology at Eindhoven University of Technology. One teaches me how systems are built; the other, who they are built for.',
-    'Before that: an engineering internship at Shell, entrepreneurship training at Harvard Business School, and an assistive technology project for visually impaired children.',
+    'Before that: an engineering internship at Shell, entrepreneurship training at Harvard Business School, and a top 5% of May 2025 IB candidates.',
   ],
 
   // One quiet list. Add a line for anything worth showing.
@@ -250,7 +197,7 @@ contact: {
 },
 
 footer: {
-  note: 'Designed and built in Eindhoven.',
+  note: '  ',
 },
 
 };

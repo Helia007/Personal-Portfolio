@@ -31,9 +31,12 @@ is white and stays out of the way of your work.
 The order is: **cover → about → work → skills → contact.** People meet you,
 then your projects, then the detail.
 
-Work is a museum grid — every tile the same size, evenly hung, caption
+Work is a museum grid — every tile the same size (4:3), evenly hung, caption
 beneath. `featured: true` puts a project first in the grid rather than making
 it bigger, so the wall stays even.
+
+Filter buttons build themselves from whatever `category` values you use. With
+only one category they disappear on their own.
 
 The cover is built from layers: drifting fields of teal light, a circuit trace
 pattern with pulses running along it, a vignette and film grain. To calm the

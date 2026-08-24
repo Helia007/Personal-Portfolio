@@ -97,6 +97,41 @@
     });
   }
 
+  /* filters, built from whatever categories you actually use */
+  var filterBar = document.getElementById('filters');
+  var emptyEl   = document.getElementById('emptyNote');
+  if (filterBar && gallery) {
+    var cats = [];
+    projects.forEach(function (p) {
+      var c = has(p.category) ? p.category : 'Other';
+      if (cats.indexOf(c) === -1) cats.push(c);
+    });
+
+    if (cats.length > 1) {
+      filterBar.innerHTML = ['<button class="filter is-on" data-f="all">All</button>']
+        .concat(cats.map(function (c) {
+          return '<button class="filter" data-f="' + esc(c) + '">' + esc(c) + '</button>';
+        })).join('');
+
+      filterBar.addEventListener('click', function (e) {
+        var btn = e.target.closest('.filter');
+        if (!btn) return;
+        $$('.filter', filterBar).forEach(function (b) { b.classList.remove('is-on'); });
+        btn.classList.add('is-on');
+        var f = btn.getAttribute('data-f'), shown = 0;
+        $$('.tile', gallery).forEach(function (tile) {
+          var p = projects[parseInt(tile.getAttribute('data-i'), 10)] || {};
+          var ok = f === 'all' || (has(p.category) ? p.category : 'Other') === f;
+          tile.hidden = !ok;
+          if (ok) shown++;
+        });
+        if (emptyEl) emptyEl.hidden = shown > 0;
+      });
+    } else {
+      filterBar.remove();          /* one category only — no point showing a filter */
+    }
+  }
+
   /* ── 5. PROJECT DIALOG ─────────────────────────────────────────────── */
   var modal = document.getElementById('modal');
   var modalBody = document.getElementById('modalBody');

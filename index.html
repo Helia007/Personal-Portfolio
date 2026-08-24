@@ -23,7 +23,9 @@
 
   <script>
     (function () {
-      var t = localStorage.getItem('portfolio-theme');
+      // The key is versioned: bumping it retires any theme a visitor saved
+      // under an older art direction, so everyone starts on the intended one.
+      var t = localStorage.getItem('portfolio-theme-v2');
       if (!t) t = 'light';  // white body is the intended look; visitors can switch
       document.documentElement.setAttribute('data-theme', t);
     })();

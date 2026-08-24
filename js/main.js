@@ -251,7 +251,7 @@
   if (themeBtn) themeBtn.addEventListener('click', function () {
     var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     root.setAttribute('data-theme', next);
-    localStorage.setItem('portfolio-theme', next);
+    localStorage.setItem('portfolio-theme-v2', next);
   });
 
   /* ── 9. MENU ───────────────────────────────────────────────────────── */

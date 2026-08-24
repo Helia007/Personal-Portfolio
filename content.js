@@ -18,11 +18,10 @@
    JUMP TO A SECTION:
      [1] PROFILE ....... name, location, email, links
      [2] OPENER ........ the first black screen
-     [3] STATEMENT ..... the one big line
-     [4] PROJECTS ...... ⭐ the heart of the site
-     [5] SKILLS ........ your disciplines, as a datasheet
-     [6] ABOUT ......... photo, a few lines, credentials
-     [7] CONTACT ....... the closing screen
+     [3] PROJECTS ...... ⭐ the gallery
+     [4] SKILLS ........ your disciplines
+     [5] ABOUT ......... the big line, your photo, a few lines, credentials
+     [6] CONTACT ....... the closing screen
    ═══════════════════════════════════════════════════════════════════════════ */
 
 window.PORTFOLIO = {
@@ -60,22 +59,7 @@ opener: {
 },
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   [3] STATEMENT  —  the one place on the site where you actually write.
-   Two sentences maximum. Make them count.
-   ═══════════════════════════════════════════════════════════════════════════ */
-statement: {
-  text: 'Every system eventually meets a person. I work on that moment.',
-
-  // Three short facts. Delete one to show two.
-  meta: [
-    { value: 'TU/e',   label: 'Eindhoven University of Technology' },
-    { value: 'EE + P&T', label: 'Dual degree, 2025–2028' },
-    { value: '41/45',  label: 'International Baccalaureate' },
-  ],
-},
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   [4] ⭐ PROJECTS  —  the heart of the site
+   [3] ⭐ PROJECTS  —  the gallery
    ═══════════════════════════════════════════════════════════════════════════
 
    HOW TO ADD ONE
@@ -91,7 +75,7 @@ statement: {
      year:     '2026',
      role:     'What you did',
      status:   '',                              // 'In progress' / '' 
-     featured: false,                           // true = full-width image
+     featured: false,                           // true = shown first in the gallery
      summary:  'One sentence. It appears in the popup, not on the grid.',
      image:    'assets/projects/my-photo.jpg',  // '' = quiet placeholder
      gallery:  [],
@@ -211,8 +195,7 @@ projects: [
 ],
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   [5] SKILLS  —  laid out like a datasheet: a discipline on the left,
-   what you can do on the right. Copy a { } block to add a whole new row.
+   [4] SKILLS  —  one block per discipline. Copy a { } block to add another.
    ═══════════════════════════════════════════════════════════════════════════ */
 skills: [
   {
@@ -234,9 +217,12 @@ skills: [
 ],
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   [6] ABOUT  —  short. Two paragraphs is the ceiling.
+   [5] ABOUT  —  short. Two paragraphs is the ceiling.
    ═══════════════════════════════════════════════════════════════════════════ */
 about: {
+  // The one big line at the top of the page. Two sentences maximum.
+  lead: 'Every system eventually meets a person. I work on that moment.',
+
   photo:    'assets/photo.jpg',            // '' shows your initials instead
   photoAlt: 'Helia Amini',
 
@@ -256,7 +242,7 @@ about: {
 },
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   [7] CONTACT  —  the closing screen
+   [6] CONTACT  —  the closing screen
    ═══════════════════════════════════════════════════════════════════════════ */
 contact: {
   line: 'Available for internships and collaborations.',
